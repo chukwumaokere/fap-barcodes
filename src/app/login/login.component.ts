@@ -54,6 +54,7 @@ export class LoginComponent implements OnInit {
       username: this.username,
       password: this.password
     }
+    
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -72,6 +73,8 @@ export class LoginComponent implements OnInit {
       }, error =>{
         console.log(error);
       })
+      
+     console.log('data is' , data);
   }
 
 }
