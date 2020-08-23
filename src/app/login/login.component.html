@@ -1,14 +1,14 @@
 <div class="fake-body text-center">
-    <form class="form-signin" (ngSubmit)="login('manual')">
+    <form [formGroup]="loginForm" class="form-signin" (ngSubmit)="login(loginForm.value)">
         <img class="mb-4" src="assets/icons/icon-144x144.png" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <div class="form-label-group">
             <label for="inputEmail" class="sr-only">Email address</label>
-            <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" (keyup)="onKey($event)">
+            <input formControlName="username" name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" >
         </div>
         <div class="form-label-group">
             <label for="inputPassword" class="sr-only">Password</label>
-            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="" (keyup)="onKey($event)">
+            <input formControlName="password" name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="" >
         </div>
         <div class="checkbox mb-3">
         <label>

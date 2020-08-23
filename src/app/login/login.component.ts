@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app-config';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class LoginComponent implements OnInit {
+  loginForm;
   loggedin: Boolean;
   userid: Number;
   userdata: any;
@@ -18,15 +20,21 @@ export class LoginComponent implements OnInit {
   vturl: any;
   loading: any;
   dataReturned: any;
-  username: any;
-  password: any;
+  //username: any;
+  //password: any;
+  
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
     private httpClient: HttpClient,
+    private formBuilder: FormBuilder,
     public AppConfig: AppConfig) {
       this.apiurl = this.AppConfig.apiurl;
-    this.vturl = this.AppConfig.vturl;
+      this.vturl = this.AppConfig.vturl;
+      this.loginForm = this.formBuilder.group({
+        username: '',
+        password: '',
+      })
      }
 
   ngOnInit(): void {
@@ -36,7 +44,7 @@ export class LoginComponent implements OnInit {
     console.log('logging out');
     //this.router.navigateByUrl('/login'); //this would cause an infinite loop on this page. but it should be used on other pages to force others to log in.
   }
-
+  /*
   onKey(event: any){
     //console.log(event);
     var value = event.target.value;
@@ -48,18 +56,21 @@ export class LoginComponent implements OnInit {
       this.password = value;
     }
   }
-
-  login(method){
+  */
+  login(value){
     const data = { 
-      username: this.username,
-      password: this.password
+      username: value.username,
+      password: value.password
     }
+    //console.log(value);
     
+    /*
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append('Access-Control-Allow-Origin', '*');
-
+    
+    
     this.httpClient.post(this.apiurl + 'login.php', data, {headers, observe: 'response'})
       .subscribe(data =>{
         const responseData = data.body;
@@ -75,6 +86,8 @@ export class LoginComponent implements OnInit {
       })
       
      console.log('data is' , data);
+     */
+    this.router.navigateByUrl('/orders');
   }
 
 }
