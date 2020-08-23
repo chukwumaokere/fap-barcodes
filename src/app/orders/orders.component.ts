@@ -28,7 +28,9 @@ export class OrdersComponent implements OnInit {
    }
 
   ngOnInit(): void {
-   // this.logout();
+    if (this.loggedin !== true){
+      this.logout();
+    }
   }
 
   logout(){

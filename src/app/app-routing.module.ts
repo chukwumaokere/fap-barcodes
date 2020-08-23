@@ -8,6 +8,7 @@ import { OrdersComponent } from './orders/orders.component';
 const routes: Routes = [
   { path: '', component: OrdersComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'orders', component: OrdersComponent },
   { path: 'demo', component: DemoComponent },
   { path: 'demotwo', component: DemotwoComponent }
 ];
