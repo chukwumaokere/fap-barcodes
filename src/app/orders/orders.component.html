@@ -1,6 +1,29 @@
 <app-navbar></app-navbar>
 <div class="fake-body">
     <div class="container">
-        <p>orders works</p>
+        <div class="mt-3">
+            <div class="btn-group btn-group-lg btn-group-toggle" data-toggle="buttons" aria-label="View Select">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="purchaseorders" checked> Purchase Orders
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="salesorders"> Sales Orders
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="invoices"> Invoices
+                </label>
+            </div>
+            <div class="float-right">
+                <form class="form-inline ">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-primary " type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <div class="dataTable-container mt-3">
+            <div id="myTable">
+
+            </div>
+        </div>
     </div>
 </div>

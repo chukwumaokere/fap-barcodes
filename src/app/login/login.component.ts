@@ -38,6 +38,9 @@ export class LoginComponent implements OnInit {
      }
 
   ngOnInit(): void {
+    if(this.loggedin == true){
+      this.router.navigateByUrl('/orders');
+    }
   }
 
   logout(){
