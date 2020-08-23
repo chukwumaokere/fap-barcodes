@@ -25,7 +25,7 @@ export class OrdersComponent implements OnInit {
   ) {
     this.apiurl = this.AppConfig.apiurl;
     this.vturl = this.AppConfig.vturl;
-    this.loggedin = true;
+    this.loggedin = true; // for development. remove in prod 
    }
 
   ngOnInit(): void {

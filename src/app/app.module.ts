@@ -12,6 +12,7 @@ import { OrdersComponent } from './orders/orders.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AppConfig } from './app-config';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     DemoComponent,
     DemotwoComponent,
     LoginComponent,
-    OrdersComponent
+    OrdersComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
