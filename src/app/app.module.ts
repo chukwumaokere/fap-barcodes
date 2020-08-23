@@ -7,19 +7,26 @@ import { environment } from '../environments/environment';
 import { DemoComponent } from './demo/demo.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DemotwoComponent } from './demotwo/demotwo.component';
+import { LoginComponent } from './login/login.component';
+import { OrdersComponent } from './orders/orders.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AppConfig } from './app-config';
 
 @NgModule({
   declarations: [
     AppComponent,
     DemoComponent,
-    DemotwoComponent
+    DemotwoComponent,
+    LoginComponent,
+    OrdersComponent
   ],
   imports: [
     BrowserModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [AppConfig],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
