@@ -23,10 +23,13 @@
 
 .dataTable-selector {
 	padding: 6px;
+	border-radius: 0.25rem;
 }
 
 .dataTable-input {
 	padding: 6px 12px;
+	border-radius: 0.25rem;
+	border: 1px solid #ced4da;
 }
 
 .dataTable-info {
