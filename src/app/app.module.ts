@@ -13,6 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppConfig } from './app-config';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
+import { OrderComponent } from './orders/order/order.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { NavbarComponent } from './navbar/navbar.component';
     DemotwoComponent,
     LoginComponent,
     OrdersComponent,
-    NavbarComponent
+    NavbarComponent,
+    OrderComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
