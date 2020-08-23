@@ -18,6 +18,7 @@ export class OrdersComponent implements OnInit {
   vturl: any;
   loading: any;
   tableview: any;
+  
   dataReturned: {
     "error": 0,
     "success": true,
@@ -9165,11 +9166,6 @@ export class OrdersComponent implements OnInit {
     if (this.loggedin !== true){
       this.logout();
     }
-    document.querySelector('input[name="options"]:checked')
-      .addEventListener('change', function(){ 
-        console.log(this.value); 
-        this.tableview = this.value; 
-      });
     this.initializeFakeTable();
   }
 
@@ -9177,7 +9173,9 @@ export class OrdersComponent implements OnInit {
     console.log('logging out');
     this.router.navigateByUrl('/login');
   }
-
+  updateView(radio){
+    this.tableview = radio.target.value;
+  }
   loadOrders(){
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');

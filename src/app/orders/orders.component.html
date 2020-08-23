@@ -4,13 +4,13 @@
         <div class="mt-3">
             <div class="btn-group btn-group-lg btn-group-toggle" data-toggle="buttons" aria-label="View Select">
                 <label class="btn btn-secondary active">
-                    <input type="radio" name="options" id="PurchaseOrder" checked> Purchase Orders
+                    <input type="radio" name="options" id="PurchaseOrder" value="PurchaseOrder" (click)="updateView($event)" checked> Purchase Orders
                 </label>
                 <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="SalesOrder"> Sales Orders
+                    <input type="radio" name="options" id="SalesOrder" value="SalesOrder" (click)="updateView($event)"> Sales Orders
                 </label>
                 <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="Invoice"> Invoices
+                    <input type="radio" name="options" id="Invoice" value="Invoice" (click)="updateView($event)"> Invoices
                 </label>
             </div>
             <!-- Hiding because we're using datatable search instead -->
