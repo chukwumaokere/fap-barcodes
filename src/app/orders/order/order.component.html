@@ -1,13 +1,27 @@
 <app-navbar></app-navbar>
 <div class="fake-body">
     <div class="container">
-        <div class="top-section">
-
+        <div class="top-section mt-3">
+            <div class="row">
+                <h3 class="col-sm">Order Details</h3>
+                <h5 class="col-sm">Order Number: {{orderid}}</h5>
+            </div>
+            <div class="row">
+                <p class="col-sm">Vendor Name: </p>
+                <p class="col-sm">Status: </p>
+            </div>
+            <div class="row">
+                <p class="col-sm">Vendor Order #: </p>
+                <p class="col-sm">Customer Name: </p>
+            </div>
         </div>
         <div class="items-list">
-
+            <h3>Products</h3>
+            <div class="products-grid">
+                Placeholder
+            </div>
         </div>
-        <div class="button-holder">
+        <div class="button-holder mt-4">
             <div class="btn btn-primary btn-lg save-order-button">Save Order</div>
         </div>
     </div>

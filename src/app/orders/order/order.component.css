@@ -5,3 +5,9 @@
     width: 100%;
     text-align: center;
 }
+
+.products-grid{
+    padding: 10px;
+    height: 60vh;
+    background-color: grey;
+}
