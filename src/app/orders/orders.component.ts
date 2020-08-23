@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app-config';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,7 +7,8 @@ import { DataTable } from 'simple-datatables';
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.css']
+  styleUrls: ['./orders.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class OrdersComponent implements OnInit {
   loggedin: Boolean;
@@ -16,6 +17,7 @@ export class OrdersComponent implements OnInit {
   apiurl: any;
   vturl: any;
   loading: any;
+  tableview: any;
   dataReturned: {
     "error": 0,
     "success": true,
@@ -9163,6 +9165,11 @@ export class OrdersComponent implements OnInit {
     if (this.loggedin !== true){
       this.logout();
     }
+    document.querySelector('input[name="options"]:checked')
+      .addEventListener('change', function(){ 
+        console.log(this.value); 
+        this.tableview = this.value; 
+      });
     this.initializeFakeTable();
   }
 
