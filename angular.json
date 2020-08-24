@@ -27,7 +27,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": ["src/assets/js/jquery-3.5.1.min.js", "src/assets/js/bootstrap.bundle.js","src/assets/js/quaggaJS/dist/quagga.js", "src/assets/js/quaggaJS/example/live_w_locator.js", "src/assets/js/quaggaJS/example/file_input.js"]
           },
           "configurations": {
             "production": {

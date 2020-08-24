@@ -4,6 +4,8 @@ import { AppConfig } from '../app-config';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataTable } from 'simple-datatables';
 
+declare var $: any;
+
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -20,6 +22,8 @@ export class OrdersComponent implements OnInit {
   tableview: any;
   datatable: any;
   headerview : any;
+  online: Boolean;
+
   dataReturned: any;
   data: any;
   constructor(
@@ -31,6 +35,24 @@ export class OrdersComponent implements OnInit {
     this.apiurl = this.AppConfig.apiurl;
     this.vturl = this.AppConfig.vturl;
     this.loggedin = true; // for development. remove in prod
+      //this.online = true; //for development. remove in prod
+      //offline detector
+      const setMsg = (flag) => {
+          if (flag === true){
+              this.online = true;
+          }else{
+              this.online = false;
+          }
+      }
+
+      setMsg(navigator.onLine)
+
+      window.addEventListener("online", () => {
+          setMsg(true);
+      })
+      window.addEventListener("offline", () => {
+          setMsg(false);
+      })
      this.headerview = {
          "PurchaseOrder": {
              "headings": [
@@ -9214,7 +9236,15 @@ export class OrdersComponent implements OnInit {
     }
     this.loadOrders('Potentials');
    // this.initializeTable(this.data.PurchaseOrder);
-    console.log('po is', this.data, this.loggedin);
+      var online = this.online;
+      var source;
+      if (online == true){
+          source = 'server'
+      }else{
+          source = 'local database'
+      }
+      var message = 'Orders loaded from ' + source;
+      //this.showToast(message);
   }
 
   logout(){
@@ -9309,28 +9339,49 @@ export class OrdersComponent implements OnInit {
         }
       }, error =>{
         console.log(error);
-      })
+      });
   }
 
-  initializeTable(data){
-    const t = document.createElement('table');
-    var table = document.querySelector('#myTable');
-    table.appendChild(t);
-    this.datatable = new DataTable(t, {
-        data,
-        fixedHeight: true,
-        perPage: 10,
-        perPageSelect: [10, 15, 20]
-    });
-  }
-  /*
-  showToast(msg){
-    var options = {
-      delay: 2000,
-    };
-    var toast = document.getElementById("notif");
-    toast.toast(options);
-    document.getElementById("toast-body").innerHTML = 'Orders loaded from:' + msg;
-    toast.toast('show');
-  }*/
+    initializeTable(data){
+        const t = document.createElement('table');
+        var table = document.querySelector('#myTable');
+
+        table.appendChild(t)
+
+        this.datatable = new DataTable(t, {
+            data,
+            fixedHeight: true,
+            perPage: 10,
+            perPageSelect:[10, 15, 20]
+        })
+        this.initClickableRows();
+        var app = this;
+        this.datatable.on('datatable.update', function(){
+            app.initClickableRows();
+        })
+        this.datatable.on('datatable.page', function(){
+            app.initClickableRows();
+        })
+    }
+
+    initClickableRows(){
+        var app = this;
+        var rows = document.getElementsByTagName('tr');
+        Array.from(rows).forEach(function(row){
+            row.addEventListener('click', function(this){
+                var id = this.getElementsByTagName('td')[3].innerHTML
+                app.router.navigateByUrl('/order/' + id);
+            })
+        });
+    }
+
+    /*showToast(msg){
+        var options = {
+            delay: 2000,
+        };
+        var toast = $(".toast");
+        $(".toast").toast(options);
+        $("#toast-body").html(msg);
+        $(".toast").toast('show');
+    }*/
 }
