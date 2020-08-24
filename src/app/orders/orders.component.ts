@@ -9439,6 +9439,18 @@ export class OrdersComponent implements OnInit {
             }
         ]
     })
+    this.initClickableRows();
+  }
+
+  initClickableRows(){
+    var app = this;
+    var rows = document.getElementsByTagName('tr');
+    Array.from(rows).forEach(function(row){
+      row.addEventListener('click', function(this){          
+          var id = this.getElementsByTagName('td')[3].innerHTML
+          app.router.navigateByUrl('/order/' + id);
+      })
+    });
   }
   /*
   showToast(msg){
