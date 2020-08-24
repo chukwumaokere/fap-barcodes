@@ -18,7 +18,7 @@ export class OrdersComponent implements OnInit {
   vturl: any;
   loading: any;
   tableview: any;
-  
+
   dataReturned: {
     "error": 0,
     "success": true,
@@ -9348,5 +9348,14 @@ export class OrdersComponent implements OnInit {
         ]
     })
   }
-
+  /*
+  showToast(msg){
+    var options = {
+      delay: 2000,
+    };
+    var toast = document.getElementById("notif");
+    toast.toast(options);
+    document.getElementById("toast-body").innerHTML = 'Orders loaded from:' + msg;
+    toast.toast('show');
+  }*/
 }
