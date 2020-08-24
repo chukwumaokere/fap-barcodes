@@ -37,7 +37,24 @@ export class OrdersComponent implements OnInit {
     this.apiurl = this.AppConfig.apiurl;
     this.vturl = this.AppConfig.vturl;
     this.loggedin = true; // for development. remove in prod 
-    this.online = true; //for development. remove in prod
+    //this.online = true; //for development. remove in prod
+    //offline detector
+    const setMsg = (flag) => {
+        if (flag === true){
+           this.online = true;
+        }else{
+           this.online = false;
+        }
+    }
+
+    setMsg(navigator.onLine)
+
+    window.addEventListener("online", () => {
+      setMsg(true);
+    })
+    window.addEventListener("offline", () => {
+      setMsg(false);
+    })
     this.data = {
       "PurchaseOrder": {
         "headings": [
