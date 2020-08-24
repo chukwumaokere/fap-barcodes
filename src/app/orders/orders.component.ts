@@ -9440,6 +9440,13 @@ export class OrdersComponent implements OnInit {
         ]
     })
     this.initClickableRows();
+    var app = this;
+    this.datatable.on('datatable.update', function(){
+      app.initClickableRows();
+    })
+    this.datatable.on('datatable.page', function(){
+      app.initClickableRows();
+    })
   }
 
   initClickableRows(){
