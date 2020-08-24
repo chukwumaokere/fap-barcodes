@@ -4,6 +4,8 @@ import { AppConfig } from '../app-config';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataTable } from 'simple-datatables';
 
+declare var $: any;
+
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -19,6 +21,7 @@ export class OrdersComponent implements OnInit {
   loading: any;
   tableview: any;
   datatable: any;
+  online: Boolean;
 
   dataReturned: any;
 
@@ -34,6 +37,7 @@ export class OrdersComponent implements OnInit {
     this.apiurl = this.AppConfig.apiurl;
     this.vturl = this.AppConfig.vturl;
     this.loggedin = true; // for development. remove in prod 
+    this.online = true; //for development. remove in prod
     this.data = {
       "PurchaseOrder": {
         "headings": [
@@ -9383,7 +9387,16 @@ export class OrdersComponent implements OnInit {
       this.logout();
     }
     this.initializeTable(this.data.PurchaseOrder);
-    console.log('po is', this.data, this.loggedin);
+    
+    var online = this.online;
+    var source;
+    if (online == true){
+      source = 'server'
+    }else{
+      source = 'local database'
+    }
+    var message = 'Orders loaded from ' + source;
+    this.showToast(message);   
   }
 
   logout(){
@@ -9439,15 +9452,34 @@ export class OrdersComponent implements OnInit {
             }
         ]
     })
+    this.initClickableRows();
+    var app = this;
+    this.datatable.on('datatable.update', function(){
+      app.initClickableRows();
+    })
+    this.datatable.on('datatable.page', function(){
+      app.initClickableRows();
+    })
   }
-  /*
+
+  initClickableRows(){
+    var app = this;
+    var rows = document.getElementsByTagName('tr');
+    Array.from(rows).forEach(function(row){
+      row.addEventListener('click', function(this){          
+          var id = this.getElementsByTagName('td')[3].innerHTML
+          app.router.navigateByUrl('/order/' + id);
+      })
+    });
+  }
+  
   showToast(msg){
     var options = {
       delay: 2000,
     };
-    var toast = document.getElementById("notif");
-    toast.toast(options);
-    document.getElementById("toast-body").innerHTML = 'Orders loaded from:' + msg;
-    toast.toast('show');
-  }*/
+    var toast = $(".toast");
+    $(".toast").toast(options);
+    $("#toast-body").html(msg);
+    $(".toast").toast('show');
+  }
 }
