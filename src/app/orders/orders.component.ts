@@ -4,6 +4,8 @@ import { AppConfig } from '../app-config';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataTable } from 'simple-datatables';
 
+declare var $: any;
+
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -19,6 +21,7 @@ export class OrdersComponent implements OnInit {
   loading: any;
   tableview: any;
   datatable: any;
+  online: Boolean;
 
   dataReturned: any;
 
@@ -34,6 +37,7 @@ export class OrdersComponent implements OnInit {
     this.apiurl = this.AppConfig.apiurl;
     this.vturl = this.AppConfig.vturl;
     this.loggedin = true; // for development. remove in prod 
+    this.online = true; //for development. remove in prod
     this.data = {
       "PurchaseOrder": {
         "headings": [
@@ -9383,7 +9387,16 @@ export class OrdersComponent implements OnInit {
       this.logout();
     }
     this.initializeTable(this.data.PurchaseOrder);
-    console.log('po is', this.data, this.loggedin);
+    
+    var online = this.online;
+    var source;
+    if (online == true){
+      source = 'server'
+    }else{
+      source = 'local database'
+    }
+    var message = 'Orders loaded from ' + source;
+    this.showToast(message);   
   }
 
   logout(){
@@ -9459,14 +9472,14 @@ export class OrdersComponent implements OnInit {
       })
     });
   }
-  /*
+  
   showToast(msg){
     var options = {
       delay: 2000,
     };
-    var toast = document.getElementById("notif");
-    toast.toast(options);
-    document.getElementById("toast-body").innerHTML = 'Orders loaded from:' + msg;
-    toast.toast('show');
-  }*/
+    var toast = $(".toast");
+    $(".toast").toast(options);
+    $("#toast-body").html(msg);
+    $(".toast").toast('show');
+  }
 }
