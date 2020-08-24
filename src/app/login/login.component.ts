@@ -4,6 +4,7 @@ import { AppConfig } from '../app-config';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -49,36 +50,29 @@ export class LoginComponent implements OnInit {
   }
 
   login(value){
-    const data = { 
-      username: value.username,
-      password: value.password
+    const data = {
+        username: value.username,
+        password: value.password
     }
-    //console.log(value);
-    
-    /*
+
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append('Access-Control-Allow-Origin', '*');
-    
-    
-    this.httpClient.post(this.apiurl + 'login.php', data, {headers, observe: 'response'})
-      .subscribe(data =>{
+    this.httpClient.post(this.apiurl + 'postLogin.php', data, {headers, observe: 'response'})
+      .subscribe(data => {
         const responseData = data.body;
         const success = responseData['success'];
         console.log(data);
-        if(success == true){
-          //... do something with that data.
+        if (success == true){
+            this.router.navigateByUrl('/orders');
         }else{
           console.log('failed to fetch data');
         }
-      }, error =>{
+      }, error => {
         console.log(error);
       })
-      
-     console.log('data is' , data);
-     */
-    this.router.navigateByUrl('/orders');
+     //console.log('data is' , data);
   }
 
 }

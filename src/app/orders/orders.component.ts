@@ -19,12 +19,9 @@ export class OrdersComponent implements OnInit {
   loading: any;
   tableview: any;
   datatable: any;
-
+  headerview : any;
   dataReturned: any;
-
   data: any;
-
-  
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -33,219 +30,52 @@ export class OrdersComponent implements OnInit {
   ) {
     this.apiurl = this.AppConfig.apiurl;
     this.vturl = this.AppConfig.vturl;
-    this.loggedin = true; // for development. remove in prod 
-    this.data = {
-      "PurchaseOrder": {
-        "headings": [
-            "Subject",
-            "Vendor Name",
-            "Vendor Order #",
-            "FAP Order #",
-            "Status",
-            "Customer Name",
-            "Job Name"
-        ],
-        "data": [
-          [
-              "Hedwig F. Nguyen",
-              "Manager",
-              "Arcu Vel Foundation",
-              "9875",
-              "03/27/2017",
-              "nunc.ullamcorper@metusvitae.com",
-              "070 8206 9605"
-          ],
-          [
-              "Genevieve U. Watts",
-              "Manager",
-              "Eget Incorporated",
-              "9557",
-              "07/18/2017",
-              "Nullam.vitae@egestas.edu",
-              "0800 025698"
-          ],
-          [
-              "Kyra S. Baldwin",
-              "Manager",
-              "Lorem Vitae Limited",
-              "3854",
-              "04/14/2016",
-              "in@elita.org",
-              "0800 237 8846"
-          ],
-          [
-              "Stephen V. Hill",
-              "Manager",
-              "Eget Mollis Institute",
-              "8820",
-              "03/03/2016",
-              "eu@vel.com",
-              "0800 682 4591"
-          ],
-          [
-              "Vielka Q. Chapman",
-              "Manager",
-              "Velit Pellentesque Ultricies Institute",
-              "2307",
-              "06/25/2017",
-              "orci.Donec.nibh@mauriserateget.edu",
-              "0800 181 5795"
-          ],
-          [
-              "Ocean W. Curtis",
-              "Manager",
-              "Eu Ltd",
-              "6868",
-              "08/24/2017",
-              "cursus.et@cursus.edu",
-              "(016977) 9585"
-          ],
-          [
-              "Kato F. Tucker",
-              "Manager",
-              "Vel Lectus Limited",
-              "4713",
-              "11/06/2017",
-              "Duis@Lorem.edu",
-              "070 0981 8503"
-          ],
-          [
-              "Robin J. Wise",
-              "Manager",
-              "Curabitur Dictum PC",
-              "3285",
-              "02/09/2017",
-              "blandit@montesnascetur.edu",
-              "0800 259158"
-          ],
-          [
-              "Uriel H. Guerrero",
-              "Assistant",
-              "Mauris Inc.",
-              "2294",
-              "02/11/2018",
-              "vitae@Innecorci.net",
-              "0500 948772"
-          ],
-          [
-              "Yasir W. Benson",
-              "Assistant",
-              "At Incorporated",
-              "3897",
-              "01/13/2017",
-              "ornare.elit.elit@atortor.edu",
-              "0391 916 3600"
-          ],
-          [
-              "Shafira U. French",
-              "Assistant",
-              "Nisi Magna Incorporated",
-              "5116",
-              "07/23/2016",
-              "metus.In.nec@bibendum.ca",
-              "(018013) 26699"
-          ],
-          [
-              "Casey E. Hood",
-              "Assistant",
-              "Lorem Vitae Odio Consulting",
-              "7079",
-              "05/05/2017",
-              "justo.Praesent@sitamet.ca",
-              "0800 570796"
-          ],
-          [
-              "Caleb X. Finch",
-              "Assistant",
-              "Elit Associates",
-              "3629",
-              "09/19/2016",
-              "condimentum@eleifend.com",
-              "056 1551 7431"
-          ]
-        ]
-      },
-      "SalesOrder":{
-        "headings": [
-          "Subject",
-          "Vendor Name",
-          "Vendor Order #",
-          "FAP Order #",
-          "Status",
-          "Customer Name",
-          "Job Name"
-        ],
-        "data":[
-          [
-            "Ocean W. Curtis",
-            "Manager",
-            "Eu Ltd",
-            "6868",
-            "08/24/2017",
-            "cursus.et@cursus.edu",
-            "(016977) 9585"
-          ],
-          [
-            "Kato F. Tucker",
-            "Manager",
-            "Vel Lectus Limited",
-            "4713",
-            "11/06/2017",
-            "Duis@Lorem.edu",
-            "070 0981 8503"
-          ],
-          [
-            "Robin J. Wise",
-            "Manager",
-            "Curabitur Dictum PC",
-            "3285",
-            "02/09/2017",
-            "blandit@montesnascetur.edu",
-            "0800 259158"
-          ],
-        ]
-      },
-      "Invoice": {
-        "headings": [
-          "Subject",
-          "Vendor Name",
-          "Vendor Order #",
-          "FAP Order #",
-          "Status",
-          "Customer Name",
-          "Job Name"
-        ],
-        "data":[
-          [
-            "Shafira U. French",
-            "Assistant",
-            "Nisi Magna Incorporated",
-            "5116",
-            "07/23/2016",
-            "metus.In.nec@bibendum.ca",
-            "(018013) 26699"
-          ],
-          [
-            "Casey E. Hood",
-            "Assistant",
-            "Lorem Vitae Odio Consulting",
-            "7079",
-            "05/05/2017",
-            "justo.Praesent@sitamet.ca",
-            "0800 570796"
-          ],
-          [
-            "Caleb X. Finch",
-            "Assistant",
-            "Elit Associates",
-            "3629",
-            "09/19/2016",
-            "condimentum@eleifend.com",
-            "056 1551 7431"
-          ]
-        ]
-      }
-    };
+    this.loggedin = true; // for development. remove in prod
+     this.headerview = {
+         "PurchaseOrder": {
+             "headings": [
+                 "Subject",
+                 "Vendor Name",
+                 "PO #",
+                 "Status",
+                 "Customer Name",
+                 "Sales Commission"
+             ],
+             "apiurl":  this.apiurl + 'getPurchaseOrder.php'
+         },
+         "Potentials": {
+             "headings": [
+                 "Order Name",
+                 "Vendor",
+                 "Vendor SO #",
+                 "Order Number",
+                 "Sale Stage",
+                 "Customer Name",
+                 "Amount"
+             ],
+             "apiurl": this.apiurl + 'getorder.php'
+         },
+         "SalesOrder": {
+             "headings": [
+                 "Subject",
+                 "Vendor Name",
+                 "Vendor SO#",
+                 "Status",
+                 "Customer Name",
+             ],
+             "apiurl": this.apiurl + 'getSaleOrder.php'
+         },
+         "Invoice": {
+             "headings": [
+                 "Subject",
+                 "Invoice No",
+                 "Invoice Date",
+                 "Status",
+                 "Customer Name",
+             ],
+             "apiurl": this.apiurl + 'getInvoices.php'
+         }
+     } ;
     this.dataReturned = {
       "error": 0,
       "success": true,
@@ -9382,7 +9212,8 @@ export class OrdersComponent implements OnInit {
     if (this.loggedin !== true){
       this.logout();
     }
-    this.initializeTable(this.data.PurchaseOrder);
+    this.loadOrders('Potentials');
+   // this.initializeTable(this.data.PurchaseOrder);
     console.log('po is', this.data, this.loggedin);
   }
 
@@ -9393,24 +9224,86 @@ export class OrdersComponent implements OnInit {
 
   updateView(radio){
     this.tableview = radio.target.value;
-    var tabledata = this.data[this.tableview];
+    this.loadOrders(this.tableview);
+    /*var tabledata = this.data[this.tableview];
     this.datatable.destroy();
-    this.initializeTable(tabledata);
+    this.initializeTable(tabledata);*/
   }
 
-  loadOrders(){
+  loadOrders(module){
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append('Access-Control-Allow-Origin', '*');
+    if(module == '' || module == undefined){
+        module = 'Potentials';
+    }
+    var url = this.headerview[module]['apiurl'];
 
-    this.httpClient.get(this.apiurl + 'getorders.php', {headers, observe: 'response'})
-      .subscribe(data =>{
+    this.httpClient.get(url, {headers, observe: 'response'})
+      .subscribe(data => {
         const responseData = data.body;
         const success = responseData['success'];
-        console.log(data);
-        if(success == true){
-          //... do something with that data.
+        if (success == true){
+           const listDatas = responseData['data'];
+           const itemDetail = [];
+           if (listDatas.length > 0){
+                for (var i =0; i<listDatas.length; i++){
+                    if(module == 'PurchaseOrder') {
+                        var item = [
+                            listDatas[i]['subject'],
+                            listDatas[i]['vendorname'],
+                            listDatas[i]['purchaseorder_no'],
+                            listDatas[i]['postatus'],
+                            listDatas[i]['contactname'],
+                            listDatas[i]['salescommission'],
+
+                        ];
+                    }else if(module == 'Potentials'){
+                        var item = [
+                            listDatas[i]['potentialname'],
+                            listDatas[i]['cf_1056'],
+                            listDatas[i]['cf_1060'],
+                            listDatas[i]['potential_no'],
+                            listDatas[i]['sales_stage'],
+                            listDatas[i]['contactname'],
+                            listDatas[i]['amount'],
+
+                        ];
+                    }
+                    else if(module == 'SalesOrder'){
+                        var item = [
+                            listDatas[i]['subject'],
+                            listDatas[i]['vendorname'],
+                            listDatas[i]['cf_960'],
+                            listDatas[i]['sostatus'],
+                            listDatas[i]['contactname'],
+
+                        ];
+                    }
+                    else if(module == 'Invoice'){
+                        var item = [
+                            listDatas[i]['subject'],
+                            listDatas[i]['invoice_no'],
+                            listDatas[i]['invoicedate'],
+                            listDatas[i]['invoicestatus'],
+                            listDatas[i]['contactname'],
+
+                        ];
+                    }
+                    itemDetail.push(item);
+                }
+
+           }
+            var tabledata = {
+                "headings": this.headerview[module]['headings'],
+                "data": itemDetail
+            };
+           if(this.datatable != undefined) {
+               this.datatable.destroy();
+           }
+           this.initializeTable(tabledata);
+
         }else{
           console.log('failed to fetch data');
         }
@@ -9422,23 +9315,13 @@ export class OrdersComponent implements OnInit {
   initializeTable(data){
     const t = document.createElement('table');
     var table = document.querySelector('#myTable');
-  
-    table.appendChild(t)
-  
+    table.appendChild(t);
     this.datatable = new DataTable(t, {
         data,
         fixedHeight: true,
-        perPage: 7,
-        perPageSelect:[7, 10, 15, 20],
-        filters: {"Job": ["Assistant", "Manager"]},
-        columns: [
-            {
-                select: 4,
-                type: "date",
-                format: "MM/DD/YYYY"
-            }
-        ]
-    })
+        perPage: 10,
+        perPageSelect: [10, 15, 20]
+    });
   }
   /*
   showToast(msg){
