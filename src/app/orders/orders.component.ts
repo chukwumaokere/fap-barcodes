@@ -81,23 +81,28 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.loggedin !== true){
+    if(localStorage.getItem('userdata') !== '' && localStorage.getItem('userdata') !== null ){
+      var online = this.online;
+      var source;
+      if (online == true){
+        source = 'server'
+      }else{
+        source = 'local database'
+      }
+      var message = 'Orders loaded from ' + source;
+      this.showToast(message);   
+    }else{
       this.logout();
     }
-    
-    var online = this.online;
-    var source;
-    if (online == true){
-      source = 'server'
-    }else{
-      source = 'local database'
-    }
-    var message = 'Orders loaded from ' + source;
-    this.showToast(message);   
   }
 
   logout(){
     console.log('logging out');
+    try{
+      localStorage.removeItem("userdata");
+    }catch(err){
+
+    }
     this.router.navigateByUrl('/login');
   }
 

@@ -14,9 +14,22 @@ export class OrderComponent implements OnInit {
   ) { this.orderid = this.route.snapshot.paramMap.get('orderid'); }
 
   ngOnInit(): void {
-    
+    if(localStorage.getItem('userdata') !== '' && localStorage.getItem('userdata') !== null ){
+      
+    }else{
+      this.logout();
+    }
 
   }
   
+  logout(){
+    console.log('logging out');
+    try{
+      localStorage.removeItem("userdata");
+    }catch(err){
+
+    }
+    this.router.navigateByUrl('/login');
+  }
 
 }

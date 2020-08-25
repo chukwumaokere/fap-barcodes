@@ -45,7 +45,12 @@ export class NavbarComponent implements OnInit {
 
   logout(){
     console.log('logging out');
-    this.router.navigateByUrl('/login'); //this would cause an infinite loop on this page. but it should be used on other pages to force others to log in.
+    try{
+      localStorage.removeItem("userdata");
+      this.router.navigateByUrl('/login');
+    }catch(err){
+
+    }
   }
 
 }

@@ -8,7 +8,7 @@ import { OrderComponent } from './orders/order/order.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
-  { path: '', component: OrdersComponent },
+  { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'orders', component: OrdersComponent },
   { path: 'order/:orderid', component: OrderComponent }, 
