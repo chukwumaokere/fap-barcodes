@@ -62,6 +62,12 @@ export class OrdersComponent implements OnInit {
     window.addEventListener("offline", () => {
       setMsg(false);
     })
+    this.loadData().then(() => {
+      console.log('loaded data async');
+      this.initializeTable(this.data.PurchaseOrder);
+    }).catch(error => {
+      console.error(error);
+    })
    }
 
   private registerToEvents(offlineDetectorService: OfflineDetectorService) {
@@ -78,7 +84,6 @@ export class OrdersComponent implements OnInit {
     if (this.loggedin !== true){
       this.logout();
     }
-   // this.initializeTable(this.data.PurchaseOrder);
     
     var online = this.online;
     var source;
@@ -89,7 +94,6 @@ export class OrdersComponent implements OnInit {
     }
     var message = 'Orders loaded from ' + source;
     this.showToast(message);   
-    //this.ordersService.getAllOrders();
   }
 
   logout(){
@@ -154,4 +158,34 @@ export class OrdersComponent implements OnInit {
     $("#toast-body").html(msg);
     $(".toast").toast('show');
   }
+
+  async loadData(){
+    let db = await new Dexie('MyDatabase')
+    db.version(1).stores({data: 'id,data'});
+    db.open().catch(function(error){ console.error('Failed to open db: ' + (error.stack || error)) });
+    const headers = [
+      "Subject",
+      "Vendor Name",
+      "Vendor Order #",
+      "FAP Order #",
+      "Status",
+      "Customer Name",
+      "Job Name"
+    ];
+    let orderdata = await db['data'].bulkGet(['PurchaseOrder', 'SalesOrder']);
+    console.log('is it loaded ', orderdata);
+    
+    var data = {
+      "PurchaseOrder": {
+        "headings": headers,
+        "data": orderdata[0].data
+      },
+      "SalesOrder": {
+        "headings": headers,
+        "data": orderdata[1].data
+      } 
+    }
+    this.data = data;
+  }
+
 }
