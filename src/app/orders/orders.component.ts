@@ -65,18 +65,6 @@ export class OrdersComponent implements OnInit {
              ],
              "apiurl":  this.apiurl + 'getPurchaseOrder.php'
          },
-         "Potentials": {
-             "headings": [
-                 "Order Name",
-                 "Vendor",
-                 "Vendor SO #",
-                 "Order Number",
-                 "Sale Stage",
-                 "Customer Name",
-                 "Amount"
-             ],
-             "apiurl": this.apiurl + 'getorder.php'
-         },
          "SalesOrder": {
              "headings": [
                  "Subject",
@@ -9231,10 +9219,11 @@ export class OrdersComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    if (this.loggedin !== true){
-      this.logout();
-    }
-    this.loadOrders('Potentials');
+      if( localStorage.getItem('userdata') == null){
+          this.logout();
+      }
+   // this.loadOrders_new();
+    this.loadOrders('PurchaseOrder');
    // this.initializeTable(this.data.PurchaseOrder);
       var online = this.online;
       var source;
@@ -9244,7 +9233,7 @@ export class OrdersComponent implements OnInit {
           source = 'local database'
       }
       var message = 'Orders loaded from ' + source;
-      //this.showToast(message);
+      this.showToast(message);
   }
 
   logout(){
@@ -9260,13 +9249,80 @@ export class OrdersComponent implements OnInit {
     this.initializeTable(tabledata);*/
   }
 
+  loadOrders_new(){
+    var thisInstance = this;
+      var indexDb;
+      var request = indexedDB.open("FAPBarcodes",2);
+      request.onerror = function(event) {
+          console.log("Did not allow my web app to use IndexedDB!");
+      };
+      request.onsuccess = function(event) {
+          console.log(event.target.result);
+          indexDb = event.target.result;
+          console.log(indexDb);
+      };
+      request.onupgradeneeded = function(event){
+          console.log(event.target.result);
+          indexDb = event.target.result;
+          var trans= event.target.transaction;
+          console.log(indexDb);
+          if (thisInstance.online == true){
+              const headers = new HttpHeaders();
+              headers.append('Accept', 'application/json');
+              headers.append('Content-Type', 'application/x-www-form-urlencoded');
+              headers.append('Access-Control-Allow-Origin', '*');
+              const url = thisInstance.apiurl + 'getAllOrders.php';
+              thisInstance.httpClient.get(url, {headers, observe: 'response'}) .subscribe(data => {
+                  const responseData = data.body;
+                  console.log(responseData);
+                  console.log('zzzzzzzzzzzzz');
+                  const success = responseData['success'];
+                  if (success == true) {
+                      const list_so = responseData['data_so'];
+                      console.log(Object.keys(list_so).length);
+                      if (Object.keys(list_so).length > 0){
+                          console.log('yyyyyyyyyy');
+                          var so_db = indexDb.createObjectStore('fap_salesorder', {keyPath: 'crmid'});
+                          so_db.transaction.oncomplete = function(event) {
+                              // Store values in the newly created objectStore.
+                              var objectstore = indexDb.transaction("fap_salesorder", "readwrite").objectStore("fap_salesorder");
+                              objectstore.add(Object.keys(list_so));
+                          };
+                          console.log('nnnn');
+                          /*for (var i =0; i<list_so.length; i++){
+                              so_db.add(list_so[i]);
+                          }*/
+                      }
+                     /* const list_po = responseData['data_po'];
+                      if (list_po.length > 0){
+                          var po_db = indexDb.createObjectStore('fap_purchaseorder', {keyPath: 'crmid'});
+                          for (var i =0; i<list_po.length; i++){
+                              po_db.add(list_po[i]);
+                          }
+                      }
+                      const list_inv = responseData['data_inv'];
+                      if (list_inv.length > 0){
+                          var inv_db = indexDb.createObjectStore('fap_invoice', {keyPath: 'crmid'});
+                          for (var i =0; i<list_inv.length; i++){
+                              inv_db.add(list_inv[i]);
+                          }
+                      }*/
+                  }
+              });
+          }
+          else{
+
+          }
+      };
+  }
+
   loadOrders(module){
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append('Access-Control-Allow-Origin', '*');
     if(module == '' || module == undefined){
-        module = 'Potentials';
+        module = 'PurchaseOrder';
     }
     var url = this.headerview[module]['apiurl'];
 
@@ -9375,7 +9431,7 @@ export class OrdersComponent implements OnInit {
         });
     }
 
-    /*showToast(msg){
+    showToast(msg){
         var options = {
             delay: 2000,
         };
@@ -9383,5 +9439,5 @@ export class OrdersComponent implements OnInit {
         $(".toast").toast(options);
         $("#toast-body").html(msg);
         $(".toast").toast('show');
-    }*/
+    }
 }
