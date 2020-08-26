@@ -27,6 +27,7 @@ export class OrderService {
                   if (value[3] === orderId) {
                     order = value;
                     item = items[key];
+                    break;
                   }
               }
           }
