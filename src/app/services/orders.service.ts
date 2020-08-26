@@ -54,7 +54,7 @@ export class OrdersService {
    private createDatabases(){
      this.db = new Dexie('FAPBarcodes');
      this.db.version(1).stores({
-       data: 'id,data',
+       data: 'id,data,items',
      });
      
      this.requests = new Dexie('MyRequests');
@@ -71,14 +71,20 @@ export class OrdersService {
       for (var prop in obj){
           if(!obj.hasOwnProperty(prop)) continue;
           //console.log(key + ' ' + prop + ' = ' + obj[prop]);
-          if(prop == 'data'){
-            var arrayed_data = Array.from(obj[prop]);
+          if(prop == 'data' || prop == 'items'){
+              if(prop == 'data'){
+                  var arrayed_data = Array.from(obj[prop]);
+              }
+              if(prop == 'items'){
+                  var arrayed_items = Array.from(obj[prop]);
+              }
             var massaged_data = {
               id: key,
-              data: arrayed_data
+              data: arrayed_data,
+              items: arrayed_items
             }
             console.log(massaged_data);
-            console.log('massaged data', Array.from(obj[prop]))
+            console.log('massaged data', Array.from(obj[prop]));
 
             if (method =="update"){
                 console.log('updating exisitng database');
@@ -94,11 +100,11 @@ export class OrdersService {
               console.log('adding to new database');
               this.db.data.add(massaged_data).then(async () => {
                 console.log('data added to db');
-              })
+              });
             }
           }
       }
-    } 
+    }
    }
 
    getAllOrders(method="add"){
@@ -107,13 +113,14 @@ export class OrdersService {
     //headers.append('Content-Type', 'applocation/json');
     headers.append('Access-Control-Allow-Origin', '*');
 
-    this.httpClient.get('https://devl06.borugroup.com/cokere/' + 'orders.php', {headers, observe: 'response'})
+    this.httpClient.get(this.apiurl + 'getAllOrders.php', {headers, observe: 'response'})
       .subscribe(data =>{
         const responseData = data.body;
         const success = responseData['success'];
         console.log(data);
         if(success == true){
           //... do something with that data.
+            console.log(data.body['data']);
           var value =  JSON.parse(data.body['data']);
           console.log('data fetched', value);
           if(method == "add"){

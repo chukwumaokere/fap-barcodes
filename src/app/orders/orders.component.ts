@@ -109,7 +109,9 @@ export class OrdersComponent implements OnInit {
   updateView(radio){
     this.tableview = radio.target.value;
     var tabledata = this.data[this.tableview];
-    this.datatable.destroy();
+    if( this.datatable != undefined) {
+        this.datatable.destroy();
+    }
     this.initializeTable(tabledata);
   }
 
