@@ -83,7 +83,14 @@ export class LoginComponent implements OnInit {
         }
       }, error =>{
         console.log(error);
-        this.showToast('Invalid Username/Password combo.')
+        if (error.status == 401){
+          this.showToast('Invalid Username/Password combo.')
+        }
+        else if (error.status == 504 || error.status == 0){
+          this.showToast('You must be online to authenticate your login')
+        }else{
+          this.showToast('An unexpected error occurred during login')
+        }
       });
      //console.log('data is' , data);
   }
