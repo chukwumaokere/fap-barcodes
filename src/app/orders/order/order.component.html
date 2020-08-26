@@ -30,8 +30,8 @@
                     <tr *ngFor="let item of orderItem">
                         <td>{{ item['productname'] }}</td>
                         <td>{{ item['lineitem_id'] }}</td>
-                        <td>{{ item['quantity'] }}</td>
-                        <td>{{ item['qty_received'] }}</td>
+                        <td>{{ item['quantity'] | number:'1.0-0'}}</td>
+                        <td>{{ item['qty_received'] | number:'1.0-0' }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -39,7 +39,7 @@
 
             </div>-->
         </div>
-        <div class="button-holder mt-4">
+        <div class="button-holder my-4">
             <div class="btn btn-primary btn-lg save-order-button">Save Order</div>
         </div>
     </div>
