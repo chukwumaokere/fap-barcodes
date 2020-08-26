@@ -4,22 +4,40 @@
         <div class="top-section mt-3">
             <div class="row">
                 <h3 class="col-sm">Order Details</h3>
-                <h5 class="col-sm">Order Number: {{orderid}}</h5>
+                <h5 class="col-sm">Order Number: {{ orderData ?  orderData[3] : '' }}</h5>
             </div>
             <div class="row">
-                <p class="col-sm">Vendor Name: </p>
-                <p class="col-sm">Status: </p>
+                <p class="col-sm">Vendor Name: {{ orderData ?  orderData[1] : '' }}</p>
+                <p class="col-sm">Status: {{ orderData ?  orderData[4] : '' }}</p>
             </div>
             <div class="row">
-                <p class="col-sm">Vendor Order #: </p>
-                <p class="col-sm">Customer Name: </p>
+                <p class="col-sm">Vendor Order #: {{ orderData ?  orderData[2] : '' }}</p>
+                <p class="col-sm">Customer Name: {{ orderData ?  orderData[5] : '' }}</p>
             </div>
         </div>
         <div class="items-list">
             <h3>Products</h3>
-            <div class="products-grid">
-                Placeholder
-            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Line #</th>
+                        <th>Ordered Quantity</th>
+                        <th>Received Quantity</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="orderItem">
+                    <tr *ngFor="let item of orderItem">
+                        <td>{{ item['productname'] }}</td>
+                        <td>{{ item['lineitem_id'] }}</td>
+                        <td>{{ item['quantity'] }}</td>
+                        <td>{{ item['qty_received'] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!--<div class="products-grid">
+
+            </div>-->
         </div>
         <div class="button-holder mt-4">
             <div class="btn btn-primary btn-lg save-order-button">Save Order</div>

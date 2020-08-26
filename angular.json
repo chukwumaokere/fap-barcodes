@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "fap-barcodes"
+    }
+  },
+  "defaultProject": "fap-barcodes",
+  "cli": {
+    "analytics": false
+  }
 }

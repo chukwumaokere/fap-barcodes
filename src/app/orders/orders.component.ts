@@ -109,7 +109,9 @@ export class OrdersComponent implements OnInit {
   updateView(radio){
     this.tableview = radio.target.value;
     var tabledata = this.data[this.tableview];
-    this.datatable.destroy();
+    if( this.datatable != undefined) {
+        this.datatable.destroy();
+    }
     this.initializeTable(tabledata);
   }
 
@@ -165,7 +167,7 @@ export class OrdersComponent implements OnInit {
   }
 
   async loadData(){
-    let db = await new Dexie('MyDatabase')
+    let db = await new Dexie('FAPBarcodes')
     db.version(1).stores({data: 'id,data'});
     db.open().catch(function(error){ console.error('Failed to open db: ' + (error.stack || error)) });
     const headers = [
