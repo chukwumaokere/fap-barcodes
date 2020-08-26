@@ -89,7 +89,7 @@ export class OrdersService {
             if (method =="update"){
                 console.log('updating exisitng database');
                 let db = await new Dexie('FAPBarcodes')
-                db.version(1).stores({data: 'id,data'});
+                db.version(1).stores({data: 'id,data,items'});
                 db.open().catch(function(error){ console.error('Failed to open db: ' + (error.stack || error)) });
                 try{
                   db['data'].put(massaged_data);
