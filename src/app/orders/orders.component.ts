@@ -165,7 +165,7 @@ export class OrdersComponent implements OnInit {
   }
 
   async loadData(){
-    let db = await new Dexie('MyDatabase')
+    let db = await new Dexie('FAPBarcodes')
     db.version(1).stores({data: 'id,data'});
     db.open().catch(function(error){ console.error('Failed to open db: ' + (error.stack || error)) });
     const headers = [

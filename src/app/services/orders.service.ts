@@ -24,9 +24,9 @@ export class OrdersService {
     this.apiurl = this.AppConfig.apiurl;
     this.vturl = this.AppConfig.vturl;
     this.registerToEvents(offlineDetectorService);
-    this.db = new Dexie('MyDatabase');
+    this.db = new Dexie('FAPBarcodes');
     var app = this;
-    Dexie.exists('MyDatabase').then(function (exists){
+    Dexie.exists('FAPBarcodes').then(function (exists){
       if (exists){
         console.log('Database already exists. Updating instead');
         app.updateDatabases();
@@ -52,7 +52,7 @@ export class OrdersService {
      });
    }
    private createDatabases(){
-     this.db = new Dexie('MyDatabase');
+     this.db = new Dexie('FAPBarcodes');
      this.db.version(1).stores({
        data: 'id,data',
      });
@@ -82,7 +82,7 @@ export class OrdersService {
 
             if (method =="update"){
                 console.log('updating exisitng database');
-                let db = await new Dexie('MyDatabase')
+                let db = await new Dexie('FAPBarcodes')
                 db.version(1).stores({data: 'id,data'});
                 db.open().catch(function(error){ console.error('Failed to open db: ' + (error.stack || error)) });
                 try{
