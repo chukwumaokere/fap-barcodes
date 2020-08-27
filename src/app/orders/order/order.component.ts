@@ -1,16 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {OrderService} from '../../services/order.service';
+
+declare var $: any;
 
 @Component({
   selector: 'app-order',
   templateUrl: './order.component.html',
-  styleUrls: ['./order.component.css']
+  styleUrls: ['./order.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class OrderComponent implements OnInit {
   orderid: any;
   public orderData: any;
   public orderItem: any;
+  public scanned_barcodes: any;
+  public assetCount: any = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,7 +31,20 @@ export class OrderComponent implements OnInit {
     } else {
       this.logout();
     }
-
+    this.openAssetModal();
+    document.getElementById('code_type').addEventListener('change', (e) => {
+      //console.log('event registered', e);
+      var code_type = e.target['value'];
+      var code_value = (<HTMLInputElement>document.getElementById('barcode_value')).value;
+      if (code_type == 'code_128'){
+        this.addAsset(code_value)
+      }else{
+        this.openAssetModal();
+      }
+    })
+    document.getElementById('barcode_value').addEventListener('change', function(e){
+      //console.log('event registered', e);
+    })
   }
 
   logout(): void {
@@ -44,4 +62,14 @@ export class OrderComponent implements OnInit {
     this.orderData = order.order;
     this.orderItem = order.items;
   }
+
+  openAssetModal(){
+    $('#exampleModalCenter').modal('show');
+  }
+  
+  addAsset(code){
+    this.assetCount++;
+  }
+
+  
 }
