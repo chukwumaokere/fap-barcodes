@@ -189,5 +189,14 @@ $(function() {
         var toast = $(".toast");
         $("#toast-body").html('Code: ' + code);
         toast.toast('show');
+        var code_type = result.codeResult.format;
+        //$("#code_type").val(code_type).change();
+        //$("#barcode_value").val(code).change();
+        var barcode_type = document.getElementById('code_type')
+        barcode_type.value = code_type;
+        barcode_type.dispatchEvent(new Event('change', {bubbles: true}))
+        var barcode_value = document.getElementById('barcode_value')
+        barcode_value.value = code;
+        barcode_value.dispatchEvent(new Event('change', {bubbles: true}))
     });
 });
