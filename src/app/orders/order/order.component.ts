@@ -4,6 +4,7 @@ import {OrderService} from '../../services/order.service';
 import {ApiRequestService} from '../../services/api-request.service';
 import {OfflineDetectorService} from '../../services/offline-detector.service';
 import {DatabaseService} from '../../services/database.service';
+import {UtilsService} from '../../services/utils.service';
 
 declare var $: any;
 
@@ -33,7 +34,8 @@ export class OrderComponent implements OnInit {
     public orderService: OrderService,
     public apiRequestService: ApiRequestService,
     public offlineDetectorService: OfflineDetectorService,
-    public databaseService: DatabaseService
+    public databaseService: DatabaseService,
+    public utilsService: UtilsService
   ) {
     this.orderid = this.route.snapshot.paramMap.get('orderid');
     this.update = [];
@@ -95,6 +97,7 @@ export class OrderComponent implements OnInit {
         if (this.offlineDetectorService.isOnline){
             const params = {data: JSON.stringify(assetsData)};
             await this.apiRequestService.post(this.apiRequestService.ENDPOINT_CREATE_ASSET, params).subscribe(response => {
+                this.utilsService.showToast('Save Completed');
             }, error => {
             });
         } else {

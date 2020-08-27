@@ -5,7 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DataTable } from 'simple-datatables';
 import { OfflineDetectorService } from '../services/offline-detector.service';
 import { OrdersService } from '../services/orders.service';
-import  Dexie  from 'dexie';
+import  Dexie from 'dexie';
+import {UtilsService} from '../services/utils.service';
 
 declare var $: any;
 
@@ -17,34 +18,34 @@ declare var $: any;
 })
 
 export class OrdersComponent implements OnInit {
-  loggedin: Boolean;
-  userid: Number;
+  loggedin: boolean;
+  userid: number;
   userdata: any;
   apiurl: any;
   vturl: any;
   loading: any;
   tableview: any;
   datatable: any;
-  online: Boolean;
+  online: boolean;
 
   dataReturned: any;
 
   data: any;
 
-  
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private httpClient: HttpClient,
-    public AppConfig: AppConfig,
+    public appConfig: AppConfig,
     private offlineDetectorService: OfflineDetectorService,
     private readonly ordersService: OrdersService,
+    public utilsService: UtilsService,
   ) {
-    this.apiurl = this.AppConfig.apiurl;
-    this.vturl = this.AppConfig.vturl;
-    this.loggedin = true; // for development. remove in prod 
-    //this.online = true; //for development. remove in prod
-    //offline detector
+    this.apiurl = this.appConfig.apiurl;
+    this.vturl = this.appConfig.vturl;
+    this.loggedin = true; // for development. remove in prod
+    // this.online = true; //for development. remove in prod
+    // offline detector
     const setMsg = (flag) => {
         if (flag === true){
            this.online = true;
@@ -56,10 +57,10 @@ export class OrdersComponent implements OnInit {
 
     setMsg(navigator.onLine)
 
-    window.addEventListener("online", () => {
+    window.addEventListener('online', () => {
       setMsg(true);
     })
-    window.addEventListener("offline", () => {
+    window.addEventListener('offline', () => {
       setMsg(false);
     })
     this.loadData().then(() => {
@@ -67,10 +68,10 @@ export class OrdersComponent implements OnInit {
       this.initializeTable(this.data.PurchaseOrder);
     }).catch(error => {
       console.error(error);
-    })
+    });
    }
 
-  private registerToEvents(offlineDetectorService: OfflineDetectorService) {
+  private registerToEvents(offlineDetectorService: OfflineDetectorService): void {
    offlineDetectorService.connectionChanged.subscribe(online => {
       if (online) {
         this.online = true;
@@ -81,51 +82,51 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(localStorage.getItem('userdata') !== '' && localStorage.getItem('userdata') !== null ){
-      var online = this.online;
-      var source;
-      if (online == true){
-        source = 'server'
-      }else{
-        source = 'local database'
-      }
-      var message = 'Orders loaded from ' + source;
-      this.showToast(message);   
-    }else{
+    if (localStorage.getItem('userdata') !== '' && localStorage.getItem('userdata') !== null ){
+        const online = this.online;
+        let source;
+        if (online == true){
+          source = 'server';
+        }else{
+          source = 'local database';
+        }
+        const message = 'Orders loaded from ' + source;
+        this.utilsService.showToast(message);
+    } else {
       this.logout();
     }
   }
 
-  logout(){
+  logout(): void {
     console.log('logging out');
     try{
-      localStorage.removeItem("userdata");
-    }catch(err){
+      localStorage.removeItem('userdata');
+    }catch (err){
 
     }
     this.router.navigateByUrl('/login');
   }
 
-  updateView(radio){
+  updateView(radio): void {
     this.tableview = radio.target.value;
-    var tabledata = this.data[this.tableview];
-    if( this.datatable != undefined) {
+    const tabledata = this.data[this.tableview];
+    if (this.datatable != undefined) {
         this.datatable.destroy();
     }
     this.initializeTable(tabledata);
   }
 
-  initializeTable(data){
+  initializeTable(data): void{
     const t = document.createElement('table');
-    var table = document.querySelector('#myTable');
-  
-    table.appendChild(t)
-  
+    const table = document.querySelector('#myTable');
+
+    table.appendChild(t);
+
     this.datatable = new DataTable(t, {
         data,
         fixedHeight: true,
-        perPage: 7,
-        perPageSelect:[7, 10, 15, 20],
+        perPage: 10,
+        perPageSelect: [10, 15, 20],
         filters: {"Job": ["Assistant", "Manager"]},
         columns: [
             {
@@ -136,34 +137,24 @@ export class OrdersComponent implements OnInit {
         ]
     })
     this.initClickableRows();
-    var app = this;
+    const app = this;
     this.datatable.on('datatable.update', function(){
       app.initClickableRows();
-    })
+    });
     this.datatable.on('datatable.page', function(){
       app.initClickableRows();
-    })
+    });
   }
 
-  initClickableRows(){
+  initClickableRows(): void{
     var app = this;
     var rows = document.getElementsByTagName('tr');
     Array.from(rows).forEach(function(row){
-      row.addEventListener('click', function(this){          
+      row.addEventListener('click', function(this){
           var id = this.getElementsByTagName('td')[3].innerHTML
           app.router.navigateByUrl('/order/' + id);
-      })
+      });
     });
-  }
-  
-  showToast(msg){
-    var options = {
-      delay: 2000,
-    };
-    var toast = $(".toast");
-    $(".toast").toast(options);
-    $("#toast-body").html(msg);
-    $(".toast").toast('show');
   }
 
   async loadData(){
@@ -181,7 +172,7 @@ export class OrdersComponent implements OnInit {
     ];
     let orderdata = await db['data'].bulkGet(['PurchaseOrder', 'SalesOrder']);
     console.log('is it loaded ', orderdata);
-    
+
     var data = {
       "PurchaseOrder": {
         "headings": headers,
@@ -190,8 +181,8 @@ export class OrdersComponent implements OnInit {
       "SalesOrder": {
         "headings": headers,
         "data": orderdata[1].data
-      } 
-    }
+      }
+    };
     this.data = data;
   }
 
