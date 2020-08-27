@@ -9,7 +9,7 @@ export class UtilsService {
 
   public  showToast(msg): void {
       const options = {
-          delay: 2000,
+          delay: 2500,
       };
       const toast = $('.toast');
       $('.toast').toast(options);

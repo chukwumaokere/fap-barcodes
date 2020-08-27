@@ -187,7 +187,7 @@ $(function() {
         };
         $(".toast").toast(options);
         var toast = $(".toast");
-        $("#toast-body").html('Code: ' + code);
+        $("#toast-body").html('Barcode Added: ' + code);
         toast.toast('show');
         var code_type = result.codeResult.format;
         //$("#code_type").val(code_type).change();

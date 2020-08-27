@@ -23,10 +23,12 @@ export class OrderComponent implements OnInit {
   public scanned_barcodes: any;
   public assetCount: any = 0;
   public productname: any;
-  public qty_ordered: any;
+  public qty_ordered: any = 3;
   public qty_received: any;
   public qty_picked: any;
   public update: any;
+  public code_type: any;
+  public valid_barcodes: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,18 +51,21 @@ export class OrderComponent implements OnInit {
     } else {
       this.logout();
     }
+    var app = this;
     document.getElementById('code_type').addEventListener('change', (e) => {
       //console.log('event registered', e);
       var code_type = e.target['value'];
-      var code_value = (<HTMLInputElement>document.getElementById('barcode_value')).value;
-      if (code_type == 'code_128'){
-        this.addAsset(code_value)
-      }else{
-        this.openAssetModal();
-      }
+      app.code_type = code_type;
     });
     document.getElementById('barcode_value').addEventListener('change', function(e){
       //console.log('event registered', e);
+      var code_value = e.target['value'];
+      var code_type = app.code_type;
+      if (code_type == 'code_128'){
+        app.addAsset(code_value)
+      }else{
+        app.openAssetModal();
+      }
     });
   }
 
@@ -99,10 +104,12 @@ export class OrderComponent implements OnInit {
             await this.apiRequestService.post(this.apiRequestService.ENDPOINT_CREATE_ASSET, params).subscribe(response => {
                 this.utilsService.showToast('Save Completed');
             }, error => {
+              this.utilsService.showToast('Update failed, please try again <br>' + error);
             });
         } else {
             const db = await this.databaseService.getDb();
             db.asset_queue.add({data: assetsData});
+            this.utilsService.showToast('Update queued until you are online');
         }
     }
 
@@ -119,13 +126,44 @@ export class OrderComponent implements OnInit {
   }
 
   addAsset(code){
-    this.assetCount++;
-    var update_a = {
-        productname: this.productname,
-        code: code,
+    if(this.assetCount < this.qty_ordered){
+      var found = this.update.some(el => el.code === code);
+      if(!found){
+        var valid_barcodes = this.valid_barcodes;
+        if(this.orderType == 'SalesOrder' && valid_barcodes.includes(code)){
+          var status;
+          if(this.orderType == 'SalesOrder'){
+            status = 'Picked';
+          }
+          var update_a = {
+            productname: this.productname,
+            code: code,
+            status: status,
+          }
+          this.update.push(update_a);
+          console.log(this.update);
+          this.assetCount++;
+        }else if(this.orderType=='PurchaseOrder'){
+          if(this.orderType == 'PurchaseOrder'){
+            status = 'Received';
+          }
+          var update_a = {
+            productname: this.productname,
+            code: code,
+            status: status,
+          }
+          this.update.push(update_a);
+          console.log(this.update);
+          this.assetCount++;
+        }else{
+          this.utilsService.showToast('This barcode is not a valid barcode for this order/product')
+        }
+      }else{
+        this.utilsService.showToast('This barcode has already been scanned and assigned previously')
       }
-    this.update.push(update_a);
-    console.log(this.update);
+    }else{
+      this.utilsService.showToast('All items have already been checked in.')
+    }
   }
 
 
@@ -137,6 +175,9 @@ export class OrderComponent implements OnInit {
       row.addEventListener('click', function(this){
         console.log(this);
           var productname = this.getElementsByTagName('td')[0].innerHTML
+          app.qty_ordered = this.getElementsByTagName('td')[2].innerHTML
+          app.assetCount = this.getElementsByTagName('td')[3].innerHTML
+          app.valid_barcodes = ['chuck test1', 'chuck test2', 'chuck test3', 'chuck test4']; // need to fetch a list of valid barcodes from current row that was clicked.
           app.productname = productname;
           app.openAssetModal();
       })
