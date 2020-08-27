@@ -23,7 +23,7 @@
                         <th>Item Name</th>
                         <th>Line #</th>
                         <th>Ordered Quantity</th>
-                        <th>Received Quantity</th>
+                        <th>{{ orderType == ' PurchaseOrder' ? 'Picked Quantity' : 'Received Quantity' }}</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="orderItem">
