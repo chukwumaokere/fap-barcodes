@@ -35,8 +35,7 @@ export class OrderComponent implements OnInit {
   async ngOnInit() {
     if (localStorage.getItem('userdata') !== '' && localStorage.getItem('userdata') !== null) {
       await this.loadOrderData().then(() => {
-        console.log('adding clickable rows');
-        this.initClickableRows();
+        
       });
     } else {
       this.logout();
@@ -54,6 +53,13 @@ export class OrderComponent implements OnInit {
     document.getElementById('barcode_value').addEventListener('change', function(e){
       //console.log('event registered', e);
     })
+  }
+
+  ngAfterViewChecked(){
+    var rows = document.getElementsByTagName('tr');
+    if(rows.length > 1){
+      this.initClickableRows();
+    }
   }
 
   logout(): void {
@@ -83,23 +89,21 @@ export class OrderComponent implements OnInit {
         productname: this.productname,
         code: code,
       }
-    
     this.update.push(update_a);
     console.log(this.update);
   }
 
   
-  async initClickableRows(){
+  initClickableRows(){
     var app = this;
     var rows = document.getElementsByTagName('tr');
     console.log('the number of rows is', rows.length);
     Array.from(rows).forEach(function(row){
       row.addEventListener('click', function(this){    
         console.log(this);      
-          //var productname = this.getElementsByTagName('td')[0].innerHTML
-          //app.productname = productname;
+          var productname = this.getElementsByTagName('td')[0].innerHTML
+          app.productname = productname;
           app.openAssetModal();
-          console.log('clickable rows added');
       })
     });
   }
