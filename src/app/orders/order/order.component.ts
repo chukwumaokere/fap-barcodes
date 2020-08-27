@@ -14,8 +14,14 @@ export class OrderComponent implements OnInit {
   orderid: any;
   public orderData: any;
   public orderItem: any;
+  public orderType: any;
   public scanned_barcodes: any;
   public assetCount: any = 0;
+  public productname: any;
+  public qty_ordered: any;
+  public qty_received: any;
+  public qty_picked: any;
+  public update: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,15 +29,18 @@ export class OrderComponent implements OnInit {
     public orderService: OrderService
   ) {
     this.orderid = this.route.snapshot.paramMap.get('orderid');
+    this.update = [];
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if (localStorage.getItem('userdata') !== '' && localStorage.getItem('userdata') !== null) {
-      this.loadOrderData();
+      await this.loadOrderData().then(() => {
+        console.log('adding clickable rows');
+        this.initClickableRows();
+      });
     } else {
       this.logout();
     }
-    this.openAssetModal();
     document.getElementById('code_type').addEventListener('change', (e) => {
       //console.log('event registered', e);
       var code_type = e.target['value'];
@@ -61,6 +70,7 @@ export class OrderComponent implements OnInit {
     const order = await this.orderService.getOrderById(this.orderid);
     this.orderData = order.order;
     this.orderItem = order.items;
+    this.orderType = order.type;
   }
 
   openAssetModal(){
@@ -69,6 +79,29 @@ export class OrderComponent implements OnInit {
   
   addAsset(code){
     this.assetCount++;
+    var update_a = {
+        productname: this.productname,
+        code: code,
+      }
+    
+    this.update.push(update_a);
+    console.log(this.update);
+  }
+
+  
+  async initClickableRows(){
+    var app = this;
+    var rows = document.getElementsByTagName('tr');
+    console.log('the number of rows is', rows.length);
+    Array.from(rows).forEach(function(row){
+      row.addEventListener('click', function(this){    
+        console.log(this);      
+          //var productname = this.getElementsByTagName('td')[0].innerHTML
+          //app.productname = productname;
+          app.openAssetModal();
+          console.log('clickable rows added');
+      })
+    });
   }
 
   

@@ -6,7 +6,7 @@
       <div style="position: absolute; top: 0; right: 0; z-index:1060;">
 
         <!-- Then put toasts within -->
-        <div class="toast m-3" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 300px;">
+        <div class="toast m-3 fade hide" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 300px;">
           <div class="toast-header">
             <img src="" class="rounded mr-2" alt="">
             <strong class="mr-auto">Barcode Scanned</strong>
@@ -37,10 +37,10 @@
                     <div class="row">
                             <div class="col-md-4">Item Name</div>
                             <div class="col-md-4 text-center">Ordered Qty</div>
-                            <div class="col-md-4 text-center">Received Qty</div>
+                            <div class="col-md-4 text-center">{{ orderType == 'PurchaseOrder' ? 'Picked Quantity' : 'Received Quantity' }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4" id="item_name">Some Temporary Item name</div>
+                        <div class="col-md-4" id="item_name">{{productname}}</div>
                         <div class="col-md-4 text-center" id="qty_ordered">3</div>
                         <div class="col-md-4 text-center" id="qty_received">{{assetCount}}</div>
                     </div>
@@ -164,7 +164,7 @@
                         <th>Item Name</th>
                         <th>Line #</th>
                         <th>Ordered Quantity</th>
-                        <th>Received Quantity</th>
+                        <th>{{ orderType == 'PurchaseOrder' ? 'Picked Quantity' : 'Received Quantity' }}</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="orderItem">
