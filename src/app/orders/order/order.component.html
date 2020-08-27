@@ -37,7 +37,7 @@
                     <div class="row">
                             <div class="col-md-4">Item Name</div>
                             <div class="col-md-4 text-center">Ordered Qty</div>
-                            <div class="col-md-4 text-center">{{ orderType == 'PurchaseOrder' ? 'Picked Quantity' : 'Received Quantity' }}</div>
+                            <div class="col-md-4 text-center">{{ orderType == 'PurchaseOrder' ? 'Received Quantity' : 'Picked Quantity' }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4" id="item_name">{{productname}}</div>
@@ -164,13 +164,13 @@
                         <th>Item Name</th>
                         <th>Line #</th>
                         <th>Ordered Quantity</th>
-                        <th>{{ orderType == 'PurchaseOrder' ? 'Picked Quantity' : 'Received Quantity' }}</th>
+                        <th>{{ orderType == 'PurchaseOrder' ? 'Received Quantity' : 'Picked Quantity' }}</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="orderItem">
                     <tr *ngFor="let item of orderItem">
                         <td>{{ item['productname'] }}</td>
-                        <td>{{ item['lineitem_id'] }}</td>
+                        <td>{{ item['sequence_no'] }}</td>
                         <td>{{ item['quantity'] | number:'1.0-0'}}</td>
                         <td>{{ item['qty_received'] | number:'1.0-0' }}</td>
                     </tr>
