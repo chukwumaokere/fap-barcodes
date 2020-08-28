@@ -183,7 +183,7 @@ $(function() {
         $node.find("h4.code").html(code);
         $("#result_strip ul.thumbnails").prepend($node);
         var options = {
-            delay: 2000,
+            delay: 2500,
         };
         $(".toast").toast(options);
         var toast = $(".toast");
