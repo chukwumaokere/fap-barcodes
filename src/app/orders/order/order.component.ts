@@ -1,10 +1,15 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, ɵɵresolveBody} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {OrderService} from '../../services/order.service';
 import {ApiRequestService} from '../../services/api-request.service';
 import {OfflineDetectorService} from '../../services/offline-detector.service';
 import {DatabaseService} from '../../services/database.service';
 import {UtilsService} from '../../services/utils.service';
+/*
+import * as quag from '../../../assets/js/quaggaJS/dist/quagga.js';
+import * as fi from '../../../assets/js/quaggaJS/example/file_input.js';
+import * as lw from '../../../assets/js/quaggaJS/example/live_w_locator.js';
+*/
 
 declare var $: any;
 
@@ -30,6 +35,10 @@ export class OrderComponent implements OnInit {
   public update: any;
   public code_type: any;
   public valid_barcodes: any;
+  public loadAPI: Promise<any>;
+  public clickable_rows: Boolean = false;
+  public dynamicScripts: Array<string> = ["../../../assets/js/quaggaJS/dist/quagga.js", '../../../assets/js/quaggaJS/example/live_w_locator.js', '../../../assets/js/quaggaJS/example/file_input.js', ' '];
+  public reloadScripts: Boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,6 +51,7 @@ export class OrderComponent implements OnInit {
   ) {
     this.orderid = this.route.snapshot.paramMap.get('orderid');
     this.update = [];
+    this.clickable_rows = false;
   }
 
   public async ngOnInit(): Promise<any>{
@@ -72,8 +82,9 @@ export class OrderComponent implements OnInit {
 
   ngAfterViewChecked(){
     var rows = document.getElementsByTagName('tr');
-    if (rows.length > 1){
+    if (rows.length > 1 && this.clickable_rows == false){
       this.initClickableRows();
+      this.clickable_rows = true;
     }
   }
 
@@ -114,7 +125,9 @@ export class OrderComponent implements OnInit {
             const params = {data: JSON.stringify(assetsData)};
             await this.apiRequestService.post(this.apiRequestService.ENDPOINT_CREATE_ASSET, params).subscribe(response => {
                 this.utilsService.showToast('Save Completed');
-            }, error => {
+            }, async error => {
+              const db = await this.databaseService.getDb();
+              db.asset_queue.add({data: assetsData});
               this.utilsService.showToast('Update failed, please try again <br>' + error);
             });
         } else {
@@ -134,6 +147,14 @@ export class OrderComponent implements OnInit {
 
   openAssetModal(){
     $('#exampleModalCenter').modal('show');
+    if (this.reloadScripts == true){
+      this.loadScript();
+      this.reloadScripts = false;
+    }
+    $('#exampleModalCenter').on('hide.bs.modal', e => {
+      //this.unloadScripts();
+      //console.log('hidden');      
+    })
   }
 
   addAsset(code): void{
@@ -187,7 +208,6 @@ export class OrderComponent implements OnInit {
     // console.log('the number of rows is', rows.length);
     Array.from(rows).forEach(function(row){
       row.addEventListener('click', function(this){
-        console.log(this);
         const productname = this.getElementsByTagName('td')[0].innerHTML;
         app.qty_ordered = this.getElementsByTagName('td')[2].innerHTML;
         app.assetCount = this.getElementsByTagName('td')[3].innerHTML;
@@ -197,6 +217,44 @@ export class OrderComponent implements OnInit {
         app.openAssetModal();
       });
     });
+  }
+
+  public loadScript() {        
+    var isFound = false;
+    var scripts = document.getElementsByTagName("script")
+    for (var i = 0; i < scripts.length; ++i) {
+        if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes("loader")) {
+            isFound = true;
+        }
+    }
+
+    if (!isFound) {
+        var dynamicScripts= this.dynamicScripts;
+
+        for (var i = 0; i < dynamicScripts.length; i++) {
+            let node = document.createElement('script');
+            let body = <HTMLDivElement> document.body;
+            node.src = dynamicScripts [i];
+            node.type = 'text/javascript';
+            node.async = false;
+            node.charset = 'utf-8';
+            body.appendChild(node);
+        }
+
+    }
+  }
+
+  public unloadScripts(){
+    var isFound = false;
+    var scripts = document.getElementsByTagName("script")
+    let body = <HTMLDivElement> document.body;
+    for (var i = 0; i < scripts.length; i++) {
+      if (scripts[i].getAttribute('src') != null && this.dynamicScripts.includes(scripts[i].getAttribute('src'))) {
+          isFound = true;
+          console.log(scripts[i], scripts[i].getAttribute('src'), i)
+          body.removeChild(scripts[i]);
+      }
+    }
   }
 
 }
