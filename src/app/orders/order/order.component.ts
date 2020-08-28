@@ -107,7 +107,7 @@ export class OrderComponent implements OnInit {
            }
            data[productid].push(item);
         }
-        const assetsData = new Object();
+        const assetsData = Object();
         assetsData[orderId] = data;
 
         if (this.offlineDetectorService.isOnline){
