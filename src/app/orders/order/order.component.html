@@ -135,7 +135,7 @@
                     <!-- /Barcode Scan Stuff -->
                 </div>
                 <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
                 </div>
             </div>
             </div>
@@ -169,7 +169,7 @@
                 </thead>
                 <tbody *ngIf="orderItem">
                     <tr *ngFor="let item of orderItem">
-                        <td>{{ item['productname'] }}</td>
+                        <td [attr.data-productid]="item['productid']" class="lineItemName">{{ item['productname'] }}</td>
                         <td>{{ item['sequence_no'] }}</td>
                         <td>{{ item['quantity'] | number:'1.0-0'}}</td>
                         <td>{{ item['qty_received'] | number:'1.0-0' }}</td>
