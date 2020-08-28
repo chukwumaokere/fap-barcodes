@@ -86,7 +86,7 @@ export class OrderComponent implements OnInit {
   }
 
     public async createAssets(): Promise<any> {
-        const data = new Object();
+        const data = Object();
         const orderId = this.orderid;
         const productStatus = this.orderData['4'];
         for (const item of this.orderItem)  {
@@ -97,7 +97,7 @@ export class OrderComponent implements OnInit {
             };
             data[item.productid] = dataItem;
         }
-        const assetsData = new Object();
+        const assetsData = Object();
         assetsData[orderId] = data;
         if (this.offlineDetectorService.isOnline){
             const params = {data: JSON.stringify(assetsData)};
