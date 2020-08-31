@@ -173,10 +173,10 @@
                 </thead>
                 <tbody *ngIf="orderItem">
                     <tr *ngFor="let item of orderItem">
-                        <td [attr.data-productid]="item['productid']" class="lineItemName">{{ item['productname'] }}</td>
+                        <td [attr.data-productid]="item['productid']" class="lineItemName" [attr.data-lineitemid]="item['lineitem_id']">{{ item['productname'] }}</td>
                         <td>{{ item['sequence_no'] }}</td>
-                        <td>{{ item['quantity'] | number:'1.0-0'}}</td>
-                        <td>{{ item['qty_received'] | number:'1.0-0' }}</td>
+                        <td class="itemqty">{{ item['quantity'] | number:'1.0-0'}}</td>
+                        <td class="itemqty_received">{{ item['qty_received'] | number:'1.0-0' }}</td>
                     </tr>
                 </tbody>
             </table>

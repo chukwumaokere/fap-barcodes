@@ -171,7 +171,7 @@ export class OrdersComponent implements OnInit {
       "Job Name"
     ];
     let orderdata = await db['data'].bulkGet(['PurchaseOrder', 'SalesOrder']);
-    console.log('is it loaded ', orderdata);
+    //console.log('is it loaded ', orderdata);
 
     var data = {
       "PurchaseOrder": {

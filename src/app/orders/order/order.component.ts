@@ -25,10 +25,12 @@ export class OrderComponent implements OnInit {
   public orderData: any;
   public orderItem: any;
   public orderType: any;
+  public orderKey: any;
   public scanned_barcodes: any;
   public assetCount: any = 0;
   public productname: any;
   public productid: any;
+  public lineitemid: any;
   public qty_ordered: any = 3;
   public qty_received: any;
   public qty_picked: any;
@@ -140,9 +142,11 @@ export class OrderComponent implements OnInit {
 
   public async loadOrderData(): Promise<any> {
     const order = await this.orderService.getOrderById(this.orderid);
+    console.log(order);
     this.orderData = order.order;
     this.orderItem = order.items;
     this.orderType = order.type;
+    this.orderKey = order.item_key;
   }
 
   openAssetModal(){
@@ -152,14 +156,13 @@ export class OrderComponent implements OnInit {
       this.reloadScripts = false;
     }
     $('#exampleModalCenter').on('hide.bs.modal', e => {
-      //this.unloadScripts();
-      //console.log('hidden');      
-    })
+      // this.unloadScripts();
+      // console.log('hidden');
+        $('td.lineItemName[data-productid=' + this.productid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
+    });
   }
 
   addAsset(code): void{
-    console.log(this.assetCount);
-    console.log(this.qty_ordered);
     if (this.assetCount < this.qty_ordered){
       var found = this.update.some(el => el.code === code);
       if (!found){
@@ -173,7 +176,8 @@ export class OrderComponent implements OnInit {
             productname: this.productname,
             code: code,
             status: status,
-            productid: this.productid
+            productid: this.productid,
+            lineitemid: this.lineitemid
           }
           this.update.push(update_a);
           console.log(this.update);
@@ -186,7 +190,8 @@ export class OrderComponent implements OnInit {
               productname: this.productname,
               code: code,
               status: status,
-              productid: this.productid
+              productid: this.productid,
+              lineitemid: this.lineitemid
           };
           this.update.push(update_a);
           console.log(this.update);
@@ -214,12 +219,13 @@ export class OrderComponent implements OnInit {
         app.valid_barcodes = ['chuck test1', 'chuck test2', 'chuck test3', 'chuck test4']; // need to fetch a list of valid barcodes from current row that was clicked.
         app.productname = productname;
         app.productid = $(this).find('.lineItemName').data('productid');
+        app.lineitemid = $(this).find('.lineItemName').data('lineitemid');
         app.openAssetModal();
       });
     });
   }
 
-  public loadScript() {        
+  public loadScript() {
     var isFound = false;
     var scripts = document.getElementsByTagName("script")
     for (var i = 0; i < scripts.length; ++i) {

@@ -19,6 +19,7 @@ export class OrderService {
         let items;
         let value;
         let id;
+        let itemKey = '';
         const db = await this.databaseService.getDb();
         await db.data.each((rows) => {
             id = rows.id;
@@ -31,15 +32,17 @@ export class OrderService {
                         type = id;
                         order = value;
                         item = items[key];
+                        itemKey = key;
                         break;
                     }
                 }
             }
         });
-        const data: {'type': any, 'order': any, 'items': any} = {type: '', order: [], items: []};
+        const data: {'type': any, 'order': any, 'items': any, 'item_key': any} = {type: '', order: [], items: [], item_key: ''};
         data.type = type;
         data.order = order;
         data.items = item;
+        data.item_key = itemKey;
         return data;
     }
 }

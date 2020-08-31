@@ -89,10 +89,10 @@ export class OrdersService {
                   data: arrayed_data,
                   items: arrayed_items
               };
-              console.log(massaged_data);
-              console.log('massaged data', Array.from(obj[prop]));
+              // console.log(massaged_data);
+              // console.log('massaged data', Array.from(obj[prop]));
 
-              if (method =="update"){
+              if (method == "update"){
                   console.log('updating exisitng database');
                   let db = await new Dexie('FAPBarcodes');
                   const dbConstruction = this.databaseService.getDbConstruction();
