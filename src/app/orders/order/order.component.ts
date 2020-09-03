@@ -27,13 +27,13 @@ export class OrderComponent implements OnInit {
   public orderType: any;
   public orderKey: any;
   public scanned_barcodes: any;
-  public assetCount: any = 0;
+  public assetCount: any;
   public productname: any;
   public productid: any;
   public lineitemid: any;
-  public qty_ordered: any = 3;
-  public qty_received: any;
-  public qty_picked: any;
+  public qty_ordered: Number;
+  public qty_received: Number;
+  public qty_picked: Number;
   public update: any;
   public code_type: any;
   public valid_barcodes: any;
@@ -163,6 +163,7 @@ export class OrderComponent implements OnInit {
   }
 
   addAsset(code): void{
+    console.log('check ', typeof(this.assetCount), typeof(this.qty_ordered));
     if (this.assetCount < this.qty_ordered){
       var found = this.update.some(el => el.code === code);
       if (!found){
@@ -214,11 +215,14 @@ export class OrderComponent implements OnInit {
     Array.from(rows).forEach(function(row){
       row.addEventListener('click', function(this){
         const productname = this.getElementsByTagName('td')[0].innerHTML;
-        app.qty_ordered = this.getElementsByTagName('td')[2].innerHTML;
-        app.assetCount = $(this).find('.itemqty_received span').html();
-        app.valid_barcodes = ['chuck test1', 'chuck test2', 'chuck test3', 'chuck test4']; // need to fetch a list of valid barcodes from current row that was clicked.
+        app.qty_ordered = Number(this.getElementsByTagName('td')[2].innerHTML);
+        app.assetCount = Number($(this).find('.itemqty_received span').html());
+        //app.valid_barcodes = ['chuck test1', 'chuck test2', 'chuck test3', 'chuck test4']; // need to fetch a list of valid barcodes from current row that was clicked.
         // app.valid_barcodes =  $(this).find('.lineItemSeq').data('validbarcodes');
-        console.log(app.valid_barcodes);
+        var vb = JSON.parse((this.getElementsByClassName('lineItemSeq')[0] as HTMLElement).dataset.validbarcodes);
+        let valid_barcodes = Object.values(vb);
+        console.log(valid_barcodes);
+        app.valid_barcodes = valid_barcodes;
         app.productname = productname;
         app.productid = $(this).find('.lineItemName').data('productid');
         app.lineitemid = $(this).find('.lineItemName').data('lineitemid');
