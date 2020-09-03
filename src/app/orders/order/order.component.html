@@ -174,7 +174,7 @@
                 <tbody *ngIf="orderItem">
                     <tr *ngFor="let item of orderItem;let i = index;" [attr.data-index]="i">
                         <td [attr.data-productid]="item['productid']" class="lineItemName" [attr.data-lineitemid]="item['lineitem_id']">{{ item['productname'] }}</td>
-                        <td>{{ item['sequence_no'] }}</td>
+                        <td class="lineItemSeq" [attr.data-validbarcodes]="item['valid_barcode'] | json">{{ item['sequence_no'] }}</td>
                         <td class="itemqty">{{ item['quantity'] | number:'1.0-0'}}</td>
                         <td class="itemqty_received">
                             <span *ngIf="orderType == 'PurchaseOrder'">

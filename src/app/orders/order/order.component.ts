@@ -217,6 +217,8 @@ export class OrderComponent implements OnInit {
         app.qty_ordered = this.getElementsByTagName('td')[2].innerHTML;
         app.assetCount = $(this).find('.itemqty_received span').html();
         app.valid_barcodes = ['chuck test1', 'chuck test2', 'chuck test3', 'chuck test4']; // need to fetch a list of valid barcodes from current row that was clicked.
+        // app.valid_barcodes =  $(this).find('.lineItemSeq').data('validbarcodes');
+        console.log(app.valid_barcodes);
         app.productname = productname;
         app.productid = $(this).find('.lineItemName').data('productid');
         app.lineitemid = $(this).find('.lineItemName').data('lineitemid');
