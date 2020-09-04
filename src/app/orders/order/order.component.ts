@@ -158,7 +158,7 @@ export class OrderComponent implements OnInit {
     $('#exampleModalCenter').on('hide.bs.modal', e => {
       // this.unloadScripts();
       // console.log('hidden');
-        $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received span').html(this.assetCount);
+        $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
     });
   }
 
@@ -216,8 +216,7 @@ export class OrderComponent implements OnInit {
       row.addEventListener('click', function(this){
         const productname = this.getElementsByTagName('td')[0].innerHTML;
         app.qty_ordered = Number(this.getElementsByTagName('td')[2].innerHTML);
-        app.assetCount = Number($(this).find('.itemqty_received span').html());
-        //app.valid_barcodes = ['chuck test1', 'chuck test2', 'chuck test3', 'chuck test4']; // need to fetch a list of valid barcodes from current row that was clicked.
+        app.assetCount = Number(this.getElementsByTagName('td')[3].innerHTML);
         // app.valid_barcodes =  $(this).find('.lineItemSeq').data('validbarcodes');
         var vb = JSON.parse((this.getElementsByClassName('lineItemSeq')[0] as HTMLElement).dataset.validbarcodes);
         let valid_barcodes = Object.values(vb);

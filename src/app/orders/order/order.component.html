@@ -176,14 +176,7 @@
                         <td [attr.data-productid]="item['productid']" class="lineItemName" [attr.data-lineitemid]="item['lineitem_id']">{{ item['productname'] }}</td>
                         <td class="lineItemSeq" [attr.data-validbarcodes]="item['valid_barcode'] | json">{{ item['sequence_no'] }}</td>
                         <td class="itemqty">{{ item['quantity'] | number:'1.0-0'}}</td>
-                        <td class="itemqty_received">
-                            <span *ngIf="orderType == 'PurchaseOrder'">
-                                {{item['qty_received'] | number:'1.0-0'}}
-                            </span>
-                            <span *ngIf="orderType == 'SalesOrder'">
-                                {{item['shipped'] | number:'1.0-0'}}
-                            </span>
-                        </td>
+                        <td class="itemqty_received"> {{item['qty_received'] | number:'1.0-0'}}</td>
                     </tr>
                 </tbody>
             </table>
