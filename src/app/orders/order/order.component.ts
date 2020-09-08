@@ -5,6 +5,7 @@ import {ApiRequestService} from '../../services/api-request.service';
 import {OfflineDetectorService} from '../../services/offline-detector.service';
 import {DatabaseService} from '../../services/database.service';
 import {UtilsService} from '../../services/utils.service';
+import { ChangeDetectorRef } from '@angular/core';
 /*
 import * as quag from '../../../assets/js/quaggaJS/dist/quagga.js';
 import * as fi from '../../../assets/js/quaggaJS/example/file_input.js';
@@ -49,7 +50,8 @@ export class OrderComponent implements OnInit {
     public apiRequestService: ApiRequestService,
     public offlineDetectorService: OfflineDetectorService,
     public databaseService: DatabaseService,
-    public utilsService: UtilsService
+    public utilsService: UtilsService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.orderid = this.route.snapshot.paramMap.get('orderid');
     this.update = [];
@@ -59,7 +61,8 @@ export class OrderComponent implements OnInit {
   public async ngOnInit(): Promise<any>{
     if (localStorage.getItem('userdata') !== '' && localStorage.getItem('userdata') !== null) {
       await this.loadOrderData().then(() => {
-
+          this.cdRef.detectChanges();
+          this.initClickableRows();
       });
     } else {
       this.logout();
@@ -83,11 +86,11 @@ export class OrderComponent implements OnInit {
   }
 
   ngAfterViewChecked(){
-    var rows = document.getElementsByTagName('tr');
-    if (rows.length > 1 && this.clickable_rows == false){
-      this.initClickableRows();
-      this.clickable_rows = true;
-    }
+      var rows = document.getElementsByTagName('tr');
+      if (rows.length > 1 && this.clickable_rows == false){
+        this.initClickableRows();
+        this.clickable_rows = true;
+      }
   }
 
   logout(): void {
@@ -211,7 +214,7 @@ export class OrderComponent implements OnInit {
   initClickableRows(): void{
     const app = this;
     var rows = document.getElementsByTagName('tr');
-    // console.log('the number of rows is', rows.length);
+     console.log('the number of rows is', rows.length);
     Array.from(rows).forEach(function(row){
       row.addEventListener('click', function(this){
         const productname = this.getElementsByTagName('td')[0].innerHTML;

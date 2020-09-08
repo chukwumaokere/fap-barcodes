@@ -4,9 +4,12 @@ import { AppConfig } from '../app-config';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataTable } from 'simple-datatables';
 import { OfflineDetectorService } from '../services/offline-detector.service';
-import { OrdersService } from '../services/orders.service';
+/*import { OrdersService } from '../services/orders.service';*/
 import  Dexie from 'dexie';
 import {UtilsService} from '../services/utils.service';
+import {ApiRequestService} from '../services/api-request.service';
+import {DatabaseService} from '../services/database.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 declare var $: any;
 
@@ -38,8 +41,11 @@ export class OrdersComponent implements OnInit {
     private httpClient: HttpClient,
     public appConfig: AppConfig,
     private offlineDetectorService: OfflineDetectorService,
-    private readonly ordersService: OrdersService,
+    /*private readonly ordersService: OrdersService,*/
     public utilsService: UtilsService,
+    public apiRequestService: ApiRequestService,
+    public databaseService: DatabaseService,
+    private SpinnerService: NgxSpinnerService
   ) {
     this.apiurl = this.appConfig.apiurl;
     this.vturl = this.appConfig.vturl;
@@ -65,7 +71,6 @@ export class OrdersComponent implements OnInit {
     })
     this.loadData().then(() => {
       console.log('loaded data async');
-      this.initializeTable(this.data.PurchaseOrder);
     }).catch(error => {
       console.error(error);
     });
@@ -157,33 +162,69 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  async loadData(){
-    let db = await new Dexie('FAPBarcodes')
-    db.version(1).stores({data: 'id,data'});
-    db.open().catch(function(error){ console.error('Failed to open db: ' + (error.stack || error)) });
-    const headers = [
-      "Subject",
-      "Vendor Name",
-      "Vendor Order #",
-      "FAP Order #",
-      "Status",
-      "Customer Name",
-      "Job Name"
-    ];
-    let orderdata = await db['data'].bulkGet(['PurchaseOrder', 'SalesOrder']);
-    //console.log('is it loaded ', orderdata);
+  async loadData(): Promise<any>{
+    const thisIntanse = this;
+    if (this.online){
+        thisIntanse.SpinnerService.show();
+        this.apiRequestService.get(this.apiRequestService.ENDPOINT_ORDERS)
+        .subscribe(data => {
+            const responseData = data.body;
+            const success = responseData.success;
+            if (success === true){
+                const value =  JSON.parse(data.body.data);
+                // console.log('data fetched', value);
+                const dataList = [];
+                for (const key in value){
+                    const obj = value[key];
+                    dataList.push({id: key, data: Array.from(obj['data']), items: Array.from(obj['items'])});
+                }
+                // console.log(dataList);
+                const db = new Dexie('FAPBarcodes');
+                const dbConstruction = this.databaseService.getDbConstruction();
+                db.version(1).stores(dbConstruction);
+                db['data'].bulkPut(dataList).then(function(lastKey) {
+                    thisIntanse.getDataFromIndexDB();
+                    thisIntanse.SpinnerService.hide();
+                }).catch(Dexie.BulkError, function (e) {
+                });
+            }else{
+                console.log('failed to fetch data');
+                thisIntanse.getDataFromIndexDB();
+            }
+        }, error => {
+            console.log(error);
+        });
+    }else{
+        thisIntanse.getDataFromIndexDB();
+    }
+  }
 
-    var data = {
-      "PurchaseOrder": {
-        "headings": headers,
-        "data": orderdata[0].data
-      },
-      "SalesOrder": {
-        "headings": headers,
-        "data": orderdata[1].data
-      }
-    };
-    this.data = data;
+  async getDataFromIndexDB(): Promise<any>{
+      const db = await this.databaseService.getDb();
+      const headers = [
+      'Subject',
+      'Vendor Name',
+      'Vendor Order #',
+      'FAP Order #',
+      'Status',
+      'Customer Name',
+      'Job Name'
+      ];
+      const orderdata = await db['data'].bulkGet(['PurchaseOrder', 'SalesOrder']);
+    // console.log('is it loaded ', orderdata);
+
+      const data = {
+          "PurchaseOrder": {
+            "headings": headers,
+            "data": orderdata[0].data
+          },
+          "SalesOrder": {
+            "headings": headers,
+            "data": orderdata[1].data
+          }
+      };
+      this.data = data;
+      this.initializeTable(this.data.PurchaseOrder);
   }
 
 }
