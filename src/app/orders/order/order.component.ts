@@ -6,11 +6,6 @@ import {OfflineDetectorService} from '../../services/offline-detector.service';
 import {DatabaseService} from '../../services/database.service';
 import {UtilsService} from '../../services/utils.service';
 import { ChangeDetectorRef } from '@angular/core';
-/*
-import * as quag from '../../../assets/js/quaggaJS/dist/quagga.js';
-import * as fi from '../../../assets/js/quaggaJS/example/file_input.js';
-import * as lw from '../../../assets/js/quaggaJS/example/live_w_locator.js';
-*/
 
 declare var $: any;
 
@@ -106,15 +101,6 @@ export class OrderComponent implements OnInit {
     public async createAssets(): Promise<any> {
         const data = Object();
         const orderId = this.orderid;
-       /* const productStatus = this.orderData['4'];
-        for (const item of this.orderItem)  {
-            const dataItem = {
-                received_qty: item.qty_received,
-                date_received: item.date_received,
-                product_status: productStatus
-            };
-            data[item.productid] = dataItem;
-        }*/
         console.log(this.update);
         for (const item of this.update)  {
            // console.log(item);
@@ -221,7 +207,6 @@ export class OrderComponent implements OnInit {
         const productname = this.getElementsByTagName('td')[0].innerHTML;
         app.qty_ordered = Number(this.getElementsByTagName('td')[2].innerHTML);
         app.assetCount = Number(this.getElementsByTagName('td')[3].innerHTML);
-        // app.valid_barcodes =  $(this).find('.lineItemSeq').data('validbarcodes');
         var vb = JSON.parse((this.getElementsByClassName('lineItemSeq')[0] as HTMLElement).dataset.validbarcodes);
         let valid_barcodes = Object.values(vb);
         console.log(valid_barcodes);
