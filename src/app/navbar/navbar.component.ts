@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import {UtilsService} from '../services/utils.service';
 declare var $: any;
 
 @Component({
@@ -9,46 +9,29 @@ declare var $: any;
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  online: Boolean;
+  online: boolean;
   constructor(
     private router: Router,
+    public utilsService: UtilsService,
   ) { }
 
   ngOnInit(): void {
-    //offline detector
-    const setMsg = (flag) => {
-      //const p = document.getElementById('msg')
-      //p.innerHTML = '<b>Online?</b> ' + flag
-        var badge = document.getElementById('status');
-        if (flag === true){
-           badge.innerHTML="Online"; 
-            badge.classList.remove("badge-secondary");
-            badge.classList.remove("badge-danger");
-            badge.classList.add("badge-success");
-        }else{
-           badge.innerHTML="Offline"; 
-            badge.classList.remove("badge-secondary");
-            badge.classList.remove("badge-success");
-            badge.classList.add("badge-danger");
-        }
-    }
+    this.utilsService.setMsg(navigator.onLine);
 
-    setMsg(navigator.onLine)
-
-    window.addEventListener("online", () => {
-      setMsg(true);
-    })
-    window.addEventListener("offline", () => {
-      setMsg(false);
-    })
+    window.addEventListener('online', () => {
+      this.utilsService.setMsg(true);
+    });
+    window.addEventListener('offline', () => {
+      this.utilsService.setMsg(false);
+    });
   }
 
-  logout(){
+  logout(): void {
     console.log('logging out');
     try{
-      localStorage.removeItem("userdata");
+      localStorage.removeItem('userdata');
       this.router.navigateByUrl('/login');
-    }catch(err){
+    }catch (err){
 
     }
   }

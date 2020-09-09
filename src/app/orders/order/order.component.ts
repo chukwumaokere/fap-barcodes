@@ -63,6 +63,7 @@ export class OrderComponent implements OnInit {
       await this.loadOrderData().then(() => {
           this.cdRef.detectChanges();
           this.initClickableRows();
+          this.utilsService.setMsg(navigator.onLine);
       });
     } else {
       this.logout();
