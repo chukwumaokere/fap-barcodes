@@ -35,7 +35,7 @@ export class OrderComponent implements OnInit {
   public valid_barcodes: any;
   public loadAPI: Promise<any>;
   public clickable_rows: Boolean = false;
-  public dynamicScripts: Array<string> = ["../../../assets/js/quaggaJS/dist/quagga.js", '../../../assets/js/quaggaJS/example/live_w_locator.js', '../../../assets/js/quaggaJS/example/file_input.js'];
+  public dynamicScripts: Array<string> = ["./assets/js/quaggaJS/dist/quagga.js", './assets/js/quaggaJS/example/live_w_locator.js', './assets/js/quaggaJS/example/file_input.js'];
   public reloadScripts: Boolean = true;
 
   constructor(
