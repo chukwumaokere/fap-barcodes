@@ -172,11 +172,11 @@ export class OrdersComponent implements OnInit {
             const success = responseData.success;
             if (success === true){
                 const value =  JSON.parse(data.body.data);
-                // console.log('data fetched', value);
+                console.log('data fetched', value);
                 const dataList = [];
                 for (const key in value){
                     const obj = value[key];
-                    dataList.push({id: key, data: Array.from(obj['data']), items: Array.from(obj['items'])});
+                    dataList.push({id: key, data: Array.from(obj['data']), items: Array.from(obj['items']), detail: Array.from(obj['detail'])});
                 }
                 // console.log(dataList);
                 const db = new Dexie('FAPBarcodes');

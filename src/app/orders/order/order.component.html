@@ -146,18 +146,38 @@
         </div>
         <!-- /Modal -->
 
-        <div class="top-section mt-3">
+        <div class="top-section mt-3" *ngIf="orderType == 'PurchaseOrder'">
             <div class="row">
                 <h3 class="col-sm">Order Details</h3>
-                <h5 class="col-sm">Order Number: {{ orderData ?  orderData[3] : '' }}</h5>
+                <h5 class="col-sm">Order Number: {{ orderDetail ?  orderDetail['purchaseorderid'] : '' }}</h5>
             </div>
             <div class="row">
-                <p class="col-sm">Vendor Name: {{ orderData ?  orderData[1] : '' }}</p>
-                <p class="col-sm">Status: {{ orderData ?  orderData[4] : '' }}</p>
+                <p class="col-sm">Vendor: {{ orderDetail ?  orderDetail['vendorname'] : '' }}</p>
+                <p class="col-sm">Status: <span class="OrderStatus">{{ orderDetail ?  orderDetail['postatus'] : '' }}</span></p>
             </div>
             <div class="row">
-                <p class="col-sm">Vendor Order #: {{ orderData ?  orderData[2] : '' }}</p>
-                <p class="col-sm">Customer Name: {{ orderData ?  orderData[5] : '' }}</p>
+                <p class="col-sm">PO Number: {{ orderDetail ?  orderDetail['purchaseorder_no'] : '' }}</p>
+                <p class="col-sm">Date : {{ orderDetail ?  orderDetail['duedate'] : '' }}</p>
+            </div>
+            <div class="row">
+                <p class="col-sm">Job Name: {{ orderDetail ?  orderDetail['subject'] : '' }}</p>
+            </div>
+        </div>
+        <div class="top-section mt-3" *ngIf="orderType == 'SalesOrder'">
+            <div class="row">
+                <h3 class="col-sm">Order Details</h3>
+                <h5 class="col-sm">Order Number: {{ orderDetail ?  orderDetail['salesorderid'] : '' }}</h5>
+            </div>
+            <div class="row">
+                <p class="col-sm">Dealer: {{ orderDetail ?  orderDetail['accountname'] : '' }}</p>
+                <p class="col-sm">Status: <span class="OrderStatus">{{ orderDetail ?  orderDetail['sostatus'] : '' }}</span></p>
+            </div>
+            <div class="row">
+                <p class="col-sm">SO Number: {{ orderDetail ?  orderDetail['cf_960'] : '' }}</p>
+                <p class="col-sm">Date : {{ orderDetail ?  orderDetail['duedate'] : '' }}</p>
+            </div>
+            <div class="row">
+                <p class="col-sm">Job Name: {{ orderDetail ?  orderDetail['subject'] : '' }}</p>
             </div>
         </div>
         <div class="items-list">
@@ -165,17 +185,23 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Item Name</th>
-                        <th>Line #</th>
+                        <th>MFR</th>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>MFR Part No</th>
+                        <!--<th style="display: none;">Line #</th>-->
                         <th>Ordered Quantity</th>
                         <th>{{ orderType == 'PurchaseOrder' ? 'Received Quantity' : 'Picked Quantity' }}</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="orderItem">
                     <tr *ngFor="let item of orderItem;let i = index;" [attr.data-index]="i">
+                        <td>{{item['vendorname']}}</td>
                         <td [attr.data-productid]="item['productid']" class="lineItemName" [attr.data-lineitemid]="item['lineitem_id']">{{ item['productname'] }}</td>
-                        <td class="lineItemSeq" [attr.data-validbarcodes]="item['valid_barcode'] | json">{{ item['sequence_no'] }}</td>
-                        <td class="itemqty">{{ item['quantity'] | number:'1.0-0'}}</td>
+                        <td>{{item['description']}}</td>
+                        <td>{{item['productcode']}}</td>
+                       <!-- <td style="display: none;" class="lineItemSeq" [attr.data-validbarcodes]="item['valid_barcode'] | json">{{ item['sequence_no'] }}</td>-->
+                        <td class="itemqty" [attr.data-validbarcodes]="item['valid_barcode'] | json">{{ item['quantity'] | number:'1.0-0'}}</td>
                         <td class="itemqty_received"> {{item['qty_received'] | number:'1.0-0'}}</td>
                     </tr>
                 </tbody>

@@ -6,6 +6,7 @@ import {OfflineDetectorService} from '../../services/offline-detector.service';
 import {DatabaseService} from '../../services/database.service';
 import {UtilsService} from '../../services/utils.service';
 import { ChangeDetectorRef } from '@angular/core';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 declare var $: any;
 
@@ -22,6 +23,7 @@ export class OrderComponent implements OnInit {
   public orderItem: any;
   public orderType: any;
   public orderKey: any;
+  public orderDetail: any;
   public scanned_barcodes: any;
   public assetCount: any;
   public productname: any;
@@ -46,7 +48,8 @@ export class OrderComponent implements OnInit {
     public offlineDetectorService: OfflineDetectorService,
     public databaseService: DatabaseService,
     public utilsService: UtilsService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private SpinnerService: NgxSpinnerService
   ) {
     this.orderid = this.route.snapshot.paramMap.get('orderid');
     this.update = [];
@@ -66,13 +69,13 @@ export class OrderComponent implements OnInit {
     let app = this;
     document.getElementById('code_type').addEventListener('change', (e) => {
       // console.log('event registered', e);
-      const code_type = e.target['value'];
-      app.code_type = code_type;
+      const codeType = e.target['value'];
+      app.code_type = codeType;
     });
     document.getElementById('barcode_value').addEventListener('change', function(e){
       // console.log('event registered', e);
-      var code_value = e.target['value'];
-      var code_type = app.code_type;
+      const code_value = e.target['value'];
+      const code_type = app.code_type;
       if (code_type == 'code_128'){
         app.addAsset(code_value);
       }else{
@@ -81,8 +84,8 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  ngAfterViewChecked(){
-      var rows = document.getElementsByTagName('tr');
+  ngAfterViewChecked(): void{
+      const rows = document.getElementsByTagName('tr');
       if (rows.length > 1 && this.clickable_rows == false){
         this.initClickableRows();
         this.clickable_rows = true;
@@ -99,6 +102,8 @@ export class OrderComponent implements OnInit {
   }
 
     public async createAssets(): Promise<any> {
+        const thisIntanse = this;
+        thisIntanse.SpinnerService.show();
         const data = Object();
         const orderId = this.orderid;
         console.log(this.update);
@@ -116,6 +121,14 @@ export class OrderComponent implements OnInit {
         if (this.offlineDetectorService.isOnline){
             const params = {data: JSON.stringify(assetsData)};
             await this.apiRequestService.post(this.apiRequestService.ENDPOINT_CREATE_ASSET, params).subscribe(response => {
+                console.log(response);
+                if (response.body.success){
+                    this.update = {};
+                    const responseData = response.body.data;
+                    const status = responseData['status'];
+                    console.log(status);
+                    $('span.OrderStatus').html(status);
+                }
                 this.utilsService.showToast('Save Completed');
             }, async error => {
               const db = await this.databaseService.getDb();
@@ -137,9 +150,10 @@ export class OrderComponent implements OnInit {
     this.orderItem = order.items;
     this.orderType = order.type;
     this.orderKey = order.item_key;
+    this.orderDetail = order.order_detail;
   }
 
-  openAssetModal(){
+  openAssetModal(): void{
     $('#exampleModalCenter').modal('show');
     if (this.reloadScripts == true){
       this.loadScript();
@@ -177,7 +191,7 @@ export class OrderComponent implements OnInit {
           if (this.orderType == 'PurchaseOrder'){
             status = 'Received';
           }
-          var update_a = {
+          const update_a = {
               productname: this.productname,
               code: code,
               status: status,
@@ -200,17 +214,17 @@ export class OrderComponent implements OnInit {
 
   initClickableRows(): void{
     const app = this;
-    var rows = document.getElementsByTagName('tr');
-     console.log('the number of rows is', rows.length);
+    const rows = document.getElementsByTagName('tr');
+    console.log('the number of rows is', rows.length);
     Array.from(rows).forEach(function(row){
       row.addEventListener('click', function(this){
-        const productname = this.getElementsByTagName('td')[0].innerHTML;
-        app.qty_ordered = Number(this.getElementsByTagName('td')[2].innerHTML);
-        app.assetCount = Number(this.getElementsByTagName('td')[3].innerHTML);
-        var vb = JSON.parse((this.getElementsByClassName('lineItemSeq')[0] as HTMLElement).dataset.validbarcodes);
-        let valid_barcodes = Object.values(vb);
-        console.log(valid_barcodes);
-        app.valid_barcodes = valid_barcodes;
+        const productname = $(this).find('.lineItemName').html();
+        app.qty_ordered = Number($(this).find('.itemqty').html());
+        app.assetCount = Number($(this).find('.itemqty_received').html());
+        const vb = JSON.parse((this.getElementsByClassName('itemqty')[0] as HTMLElement).dataset.validbarcodes);
+        const validBarcodes = Object.values(vb);
+        console.log(validBarcodes);
+        app.valid_barcodes = validBarcodes;
         app.productname = productname;
         app.productid = $(this).find('.lineItemName').data('productid');
         app.lineitemid = $(this).find('.lineItemName').data('lineitemid');
@@ -219,21 +233,21 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  public loadScript() {
-    var isFound = false;
-    var scripts = document.getElementsByTagName("script")
-    for (var i = 0; i < scripts.length; ++i) {
-        if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes("loader")) {
+  public loadScript(): void {
+    let isFound = false;
+    const scripts = document.getElementsByTagName('script');
+    for (let i = 0; i < scripts.length; ++i) {
+        if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes('loader')) {
             isFound = true;
         }
     }
 
     if (!isFound) {
-        var dynamicScripts= this.dynamicScripts;
+        const dynamicScripts = this.dynamicScripts;
 
-        for (var i = 0; i < dynamicScripts.length; i++) {
-            let node = document.createElement('script');
-            let body = <HTMLDivElement> document.body;
+        for (let i = 0; i < dynamicScripts.length; i++) {
+            const node = document.createElement('script');
+            const body = <HTMLDivElement> document.body;
             node.src = dynamicScripts [i];
             node.type = 'text/javascript';
             node.async = false;
@@ -244,11 +258,11 @@ export class OrderComponent implements OnInit {
     }
   }
 
-  public unloadScripts(){
-    var isFound = false;
-    var scripts = document.getElementsByTagName("script")
-    let body = <HTMLDivElement> document.body;
-    for (var i = 0; i < scripts.length; i++) {
+  public unloadScripts(): void{
+    let isFound = false;
+    const scripts = document.getElementsByTagName('script')
+    const body = <HTMLDivElement> document.body;
+    for (let i = 0; i < scripts.length; i++) {
       if (scripts[i].getAttribute('src') != null && this.dynamicScripts.includes(scripts[i].getAttribute('src'))) {
           isFound = true;
           console.log(scripts[i], scripts[i].getAttribute('src'), i)

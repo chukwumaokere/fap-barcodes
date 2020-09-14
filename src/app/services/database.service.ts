@@ -29,7 +29,7 @@ export class DatabaseService {
 
     public getDbConstruction(): any {
         return {
-            data: 'id, data, items',
+            data: 'id, data, items, detail',
             asset_queue: '++id, data',
         };
     }
