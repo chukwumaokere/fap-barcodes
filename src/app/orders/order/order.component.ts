@@ -123,7 +123,7 @@ export class OrderComponent implements OnInit {
             await this.apiRequestService.post(this.apiRequestService.ENDPOINT_CREATE_ASSET, params).subscribe(response => {
                 console.log(response);
                 if (response.body.success){
-                    this.update = {};
+                    this.update = [];
                     const responseData = response.body.data;
                     const status = responseData['status'];
                     console.log(status);
