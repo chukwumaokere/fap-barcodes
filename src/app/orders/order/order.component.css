@@ -21,10 +21,16 @@
 .input-group{
     width: 100%;
 }
+
+canvas.drawingBuffer, canvas.imgBuffer{
+  visibility: hidden;
+}
+
 #interactive.viewport {
   /* width: 640px;
   height: 480px;*/
   /* Minimizing size for mobile */
+  display: flex;
   width: 320px;
   height: 240px;
 }

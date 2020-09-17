@@ -3,3 +3,12 @@
     width: 100%;
     background-color: none;
 }
+tr:first-child {
+    /* max-width: 50px !important; */
+    /* text-overflow: ellipsis; */
+    white-space: nowrap;
+} 
+.dataTable-table{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

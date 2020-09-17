@@ -163,6 +163,14 @@ export class OrderComponent implements OnInit {
       // this.unloadScripts();
       // console.log('hidden');
         $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
+        document.querySelector('ul.thumbnails').innerHTML='';
+        try{
+          document.querySelector('canvas.imgBuffer').remove();
+          document.querySelector('canvas.drawingBuffer').remove();
+        }catch(err){
+          console.log('doesn\'t exist or cant remove', err);
+        }
+        
     });
   }
 
