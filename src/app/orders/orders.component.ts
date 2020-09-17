@@ -124,7 +124,10 @@ export class OrdersComponent implements OnInit {
   initializeTable(data): void{
     const t = document.createElement('table');
     const table = document.querySelector('#myTable');
-
+    const layout = {
+      top: "{search}{select}",
+      bottom: "{info}{pager}"
+    }
     table.appendChild(t);
 
     this.datatable = new DataTable(t, {
@@ -139,7 +142,11 @@ export class OrdersComponent implements OnInit {
                 type: "date",
                 format: "MM/DD/YYYY"
             }
-        ]
+        ],
+        labels: {
+          placeholder: "Search by PO#/Vendor..."
+        },
+        layout: layout
     })
     this.initClickableRows();
     const app = this;

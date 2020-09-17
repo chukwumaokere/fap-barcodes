@@ -162,7 +162,7 @@ export class OrderComponent implements OnInit {
     $('#exampleModalCenter').on('hide.bs.modal', e => {
       // this.unloadScripts();
       // console.log('hidden');
-        $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
+        //$('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
         document.querySelector('ul.thumbnails').innerHTML='';
         try{
           document.querySelector('canvas.imgBuffer').remove();
@@ -173,7 +173,15 @@ export class OrderComponent implements OnInit {
         
     });
   }
-
+  cancelChanges(): void{
+    console.log('started with', this.update);
+    this.update= [];
+    console.log('ended with', this.update);
+  }
+  saveChanges(): void{
+    $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
+    console.log(this.update);
+  }
   addAsset(code): void{
     console.log('check ', typeof(this.assetCount), typeof(this.qty_ordered));
     if (this.assetCount < this.qty_ordered){
