@@ -248,7 +248,11 @@ export class OrderComponent implements OnInit {
             app.openAssetModal();
         }
         else{
-            app.utilsService.showToast('All Items Have Been Scanned And Received.');
+            if(app.orderType == 'SalesOrder'){
+                app.utilsService.showToast('All Items Have Been Scanned And Picked.');
+            }else{
+                app.utilsService.showToast('All Items Have Been Scanned And Received.');
+            }
         }
       });
     });
