@@ -128,6 +128,10 @@ export class OrdersComponent implements OnInit {
       top: "{search}{select}",
       bottom: "{info}{pager}"
     }
+    let placeholder = "Search by PO#/Vendor...";
+    if (this.tableview == 'SalesOrder'){
+        placeholder = "Search by SO#/Vendor...";
+    }
     table.appendChild(t);
 
     this.datatable = new DataTable(t, {
@@ -144,7 +148,7 @@ export class OrdersComponent implements OnInit {
             }
         ],
         labels: {
-          placeholder: "Search by PO#/Vendor..."
+          placeholder: placeholder
         },
         layout: layout
     })
