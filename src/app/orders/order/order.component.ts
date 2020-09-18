@@ -244,7 +244,12 @@ export class OrderComponent implements OnInit {
         app.productname = productname;
         app.productid = $(this).find('.lineItemName').data('productid');
         app.lineitemid = $(this).find('.lineItemName').data('lineitemid');
-        app.openAssetModal();
+        if(app.qty_ordered > app.assetCount){
+            app.openAssetModal();
+        }
+        else{
+            app.utilsService.showToast('All Items Have Been Scanned And Received.');
+        }
       });
     });
   }
