@@ -238,11 +238,11 @@ $(function() {
                 }
             },
             locator: {
-                patchSize: "medium",
+                patchSize: "large",
                 halfSample: true
             },
             numOfWorkers: 2,
-            frequency: 10,
+            frequency: 1,
             decoder: {
                 readers : [{
                     format: "code_128_reader",
