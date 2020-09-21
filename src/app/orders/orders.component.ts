@@ -128,9 +128,9 @@ export class OrdersComponent implements OnInit {
       top: "{search}{select}",
       bottom: "{info}{pager}"
     }
-    let placeholder = "Search by PO#/Vendor...";
+    let placeholder = "Search by PO#/Vendor";
     if (this.tableview == 'SalesOrder'){
-        placeholder = "Search by SO#/Vendor...";
+        placeholder = "Search by SO#/Vendor";
     }
     table.appendChild(t);
 
