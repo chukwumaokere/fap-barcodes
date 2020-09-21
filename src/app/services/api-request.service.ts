@@ -11,6 +11,7 @@ export class ApiRequestService {
     public ENDPOINT_LOGIN = 'postLogin.php';
     public ENDPOINT_ORDERS = 'getAllOrders.php';
     public ENDPOINT_CREATE_ASSET = 'createAssets.php';
+    public ENDPOINT_AUTO_LOGIN = 'autoLogin.php';
 
     constructor(
         private httpClient: HttpClient,
