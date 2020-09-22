@@ -172,31 +172,61 @@ $(function() {
             }
     }
     });
-
+    var scannedFailedBarcodes = [];
+    var ordered, received, picked;
+    try{   
+        ordered = parseInt(document.getElementById('qty_ordered').innerHTML);
+    }catch(err){
+        console.log('oopsy woopsy!', err);
+    }
     Quagga.onDetected(function(result) {
         var code = result.codeResult.code,
             $node,
             canvas = Quagga.canvas.dom.image;
-
-        $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
-        $node.find("img").attr("src", canvas.toDataURL());
-        $node.find("h4.code").html(code);
-        $("#result_strip ul.thumbnails").prepend($node);
-        var options = {
-            delay: 2500,
-        };
-        $(".toast").toast(options);
-        var toast = $(".toast");
-        $("#toast-body").html('Barcode Added: ' + code);
-        toast.toast('show');
-        var code_type = result.codeResult.format;
-        //$("#code_type").val(code_type).change();
-        //$("#barcode_value").val(code).change();
-        var barcode_type = document.getElementById('code_type')
-        barcode_type.value = code_type;
-        barcode_type.dispatchEvent(new Event('change', {bubbles: true}))
-        var barcode_value = document.getElementById('barcode_value')
-        barcode_value.value = code;
-        barcode_value.dispatchEvent(new Event('change', {bubbles: true}))
+        
+        if (!scannedFailedBarcodes.includes(code)){
+            try{
+                received = parseInt(document.getElementById('qty_received').innerHTML);
+                picked = parseInt(document.getElementById('qty_picked').innerHTML);
+            }catch(err){
+                console.log('oopsy woopsy!', err);
+            }
+            if(received < ordered){
+                scannedFailedBarcodes.push(code);
+                $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
+                $node.find("img").attr("src", canvas.toDataURL());
+                $node.find("h4.code").html(code);
+                $("#result_strip ul.thumbnails").prepend($node);
+                var options = {
+                    delay: 2500,
+                };
+                $(".toast").toast(options);
+                var toast = $(".toast");
+                $("#toast-body").html('Barcode Added: ' + code);
+                toast.toast('show');
+                var code_type = result.codeResult.format;
+                //$("#code_type").val(code_type).change();
+                //$("#barcode_value").val(code).change();
+                var barcode_type = document.getElementById('code_type')
+                barcode_type.value = code_type;
+                barcode_type.dispatchEvent(new Event('change', {bubbles: true}))
+                var barcode_value = document.getElementById('barcode_value')
+                barcode_value.value = code;
+                barcode_value.dispatchEvent(new Event('change', {bubbles: true}))
+                console.log('scannedFailedBarcodes', scannedFailedBarcodes)
+                console.log('The math check', received, picked, ordered, scannedFailedBarcodes);
+            }else{
+                console.log('Well, its all full!', received, picked, ordered, scannedFailedBarcodes);
+                var toast = $(".toast");
+                $("#toast-body").html('All items have already been checked in.');
+                toast.toast('show');
+            }
+        }else{
+            //$("#toast-body").html('Already Existing in array: ' + code);
+            console.log('scannedFailedBarcodes on fail: ', scannedFailedBarcodes)
+        }
+        
+        
+        
     });
 });
