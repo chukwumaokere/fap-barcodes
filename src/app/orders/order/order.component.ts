@@ -130,6 +130,7 @@ export class OrderComponent implements OnInit {
                     $('span.OrderStatus').html(status);
                 }
                 this.utilsService.showToast('Save Completed');
+                thisIntanse.router.navigateByUrl('/orders');
             }, async error => {
               const db = await this.databaseService.getDb();
               db.asset_queue.add({data: assetsData});
@@ -139,6 +140,8 @@ export class OrderComponent implements OnInit {
             const db = await this.databaseService.getDb();
             db.asset_queue.add({data: assetsData});
             this.utilsService.showToast('Update queued until you are online');
+            thisIntanse.router.navigateByUrl('/orders');
+
         }
     }
 
@@ -174,9 +177,13 @@ export class OrderComponent implements OnInit {
     });
   }
   cancelChanges(): void{
-    console.log('started with', this.update);
-    this.update= [];
-    console.log('ended with', this.update);
+      if(confirm("Are you sure to cancel change?")) {
+          console.log("Yessss");
+          console.log('started with', this.update);
+          this.update= [];
+          console.log('ended with', this.update);
+          $('#exampleModalCenter').modal('hide');
+      }
   }
   saveChanges(): void{
     $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
