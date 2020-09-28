@@ -186,7 +186,22 @@ export class OrderComponent implements OnInit {
       }
   }
   saveChanges(): void{
-    $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
+      $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
+      if (this.orderType == 'SalesOrder') {
+          let picked_all = true;
+          $('.items-list tbody tr').each(function () {
+              var qty = $(this).find('td.itemqty').html();
+              var qty_received = $(this).find('td.itemqty_received').html();
+              if (qty != qty_received) {
+                  picked_all = false;
+                  return false;
+              }
+          });
+          if (picked_all) {
+              $('span.OrderStatus').html('Picked');
+          }
+      }
+      $('#exampleModalCenter').modal('hide');
     console.log(this.update);
   }
   addAsset(code): void{
