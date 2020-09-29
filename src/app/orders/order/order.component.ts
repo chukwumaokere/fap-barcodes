@@ -219,6 +219,7 @@ export class OrderComponent implements OnInit {
           this.assetCount++;
         }else{
           this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
+          //Delete most recent barcode thumbnail.
         }
       }else{
         this.utilsService.showToast('This barcode has already been scanned and assigned previously');
