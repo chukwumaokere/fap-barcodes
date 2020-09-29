@@ -177,6 +177,7 @@ export class OrderComponent implements OnInit {
     });
   }
   cancelChanges(): void{
+    //Switch to use a presented modal, not confirm dialog
       if(confirm("Are you sure to cancel change?")) {
           console.log("Yessss");
           console.log('started with', this.update);
@@ -240,6 +241,7 @@ export class OrderComponent implements OnInit {
           console.log(this.update);
           this.assetCount++;
         }else{
+          document.getElementsByClassName('thumbnails')[0].firstChild.remove();
           this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
           //Delete most recent barcode thumbnail.
         }
