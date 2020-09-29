@@ -241,7 +241,12 @@ export class OrderComponent implements OnInit {
           console.log(this.update);
           this.assetCount++;
         }else{
-          document.getElementsByClassName('thumbnails')[0].firstChild.remove();
+          try {
+            console.log('deleting newly scanned item')
+            document.getElementsByClassName('thumbnails')[0].firstChild.remove();
+          }catch(err){
+            console.log('failed to deleted ', err);
+          }
           this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
           //Delete most recent barcode thumbnail.
         }
