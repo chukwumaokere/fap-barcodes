@@ -28,11 +28,11 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Receive Items</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">{{ orderType == 'PurchaseOrder' ? 'Receive Items' : 'Pick Items' }}</h5>
                 <div>
-                    <button type="button" data-dismiss="modal" class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
+                    <button type="button"  class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
                     &nbsp;
-                <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
+                <button type="button" class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
                 </div>
                 <!--
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
