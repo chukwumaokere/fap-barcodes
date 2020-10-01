@@ -178,13 +178,15 @@ export class OrderComponent implements OnInit {
   }
   cancelChanges(): void{
     //Switch to use a presented modal, not confirm dialog
-      if(confirm("Are you sure to cancel change?")) {
+      /*if(confirm("Are you sure to cancel change?")) {
           console.log("Yessss");
           console.log('started with', this.update);
           this.update= [];
           console.log('ended with', this.update);
           $('#exampleModalCenter').modal('hide');
-      }
+      }*/
+      $('#exampleModalCenter').modal('hide');
+      $('#globalModal').modal('show');
   }
   saveChanges(): void{
       $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
