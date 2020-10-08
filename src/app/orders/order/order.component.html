@@ -161,7 +161,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body" id="modal-body-container">
-                        <h5>Are you sure to cancel change?</h5>
+                        <h5>Are you sure you'd like to cancel your changes?</h5>
                         <div align="center" style="margin-top: 10px">
                             <button type="button" class="btn btn-primary" style="margin-right: 10px"  data-dismiss="modal">Confirm</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#exampleModalCenter').modal('show');">Cancel</button>
@@ -171,6 +171,22 @@
             </div>
         </div>
         <!-- Alert-->
+
+        <!--Modal Cancel Order alert-->
+        <div class="modal fade" id="globalModalTwo" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" id="modal-body-container">
+                        <h5>Are you sure you'd like to cancel your changes?</h5>
+                        <div align="center" style="margin-top: 10px">
+                            <button type="button" class="btn btn-primary" style="margin-right: 10px"  data-dismiss="modal" (click)="goToOrders()">Yes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" >No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Cancel Order Alert-->
 
         <div class="top-section mt-3" *ngIf="orderType == 'PurchaseOrder'">
             <div class="row">
@@ -235,6 +251,8 @@
         </div>
         <div class="button-holder my-4">
             <div class="btn btn-primary btn-lg save-order-button" (click)="createAssets()">Save Order</div>
+            &nbsp;
+            <div class="btn btn-danger btn-lg save-order-button" (click)="cancelOrderChanges()" >Cancel</div>
         </div>
     </div>
 </div>

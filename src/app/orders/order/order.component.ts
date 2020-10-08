@@ -327,5 +327,11 @@ export class OrderComponent implements OnInit {
       }
     }
   }
-
+  public goToOrders(): void{
+    this.router.navigateByUrl('/orders');
+  }
+  public cancelOrderChanges(): void{
+      $('#globalModalTwo').modal('show');
+  }
+  
 }
