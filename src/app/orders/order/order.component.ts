@@ -130,7 +130,7 @@ export class OrderComponent implements OnInit {
                     $('span.OrderStatus').html(status);
                 }
                 this.utilsService.showToast('Save Completed');
-                thisIntanse.router.navigateByUrl('/orders');
+                this.router.navigateByUrl('/');
             }, async error => {
               const db = await this.databaseService.getDb();
               db.asset_queue.add({data: assetsData});
@@ -140,8 +140,7 @@ export class OrderComponent implements OnInit {
             const db = await this.databaseService.getDb();
             db.asset_queue.add({data: assetsData});
             this.utilsService.showToast('Update queued until you are online');
-            thisIntanse.router.navigateByUrl('/orders');
-
+            this.router.navigateByUrl('/');
         }
     }
 
@@ -328,10 +327,10 @@ export class OrderComponent implements OnInit {
     }
   }
   public goToOrders(): void{
-    this.router.navigateByUrl('/orders');
+    this.router.navigateByUrl('/');
   }
   public cancelOrderChanges(): void{
       $('#globalModalTwo').modal('show');
   }
-  
+
 }
