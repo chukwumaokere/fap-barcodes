@@ -179,11 +179,12 @@ export class OrderComponent implements OnInit {
     //Switch to use a presented modal, not confirm dialog
       /*if(confirm("Are you sure to cancel change?")) {
           console.log("Yessss");
-          console.log('started with', this.update);
-          this.update= [];
-          console.log('ended with', this.update);
+          
           $('#exampleModalCenter').modal('hide');
       }*/
+      console.log('started with', this.update);
+      this.update= [];
+      console.log('ended with', this.update);
       $('#exampleModalCenter').modal('hide');
       $('#globalModal').modal('show');
   }
@@ -327,6 +328,9 @@ export class OrderComponent implements OnInit {
     }
   }
   public goToOrders(): void{
+    console.log('started with', this.update);
+    this.update= [];
+    console.log('ended with', this.update);
     this.router.navigateByUrl('/');
   }
   public cancelOrderChanges(): void{
