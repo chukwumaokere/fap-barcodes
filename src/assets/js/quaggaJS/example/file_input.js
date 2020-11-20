@@ -224,6 +224,9 @@ $(function() {
         }else{
             //$("#toast-body").html('Already Existing in array: ' + code);
             console.log('scannedFailedBarcodes on fail: ', scannedFailedBarcodes)
+            var toast = $(".toast");
+            $("#toast-body").html(code + ' has already been scanned in. Please try a new barcode.');
+            toast.toast('show');
         }
         
         
