@@ -82,6 +82,12 @@ export class OrderComponent implements OnInit {
         app.openAssetModal();
       }
     });
+
+    document.getElementById('input_qty_received').addEventListener('change', (e) => {
+        // console.log('event registered', e);
+        const input_qty_received = e.target['value'];
+        app.assetCount = input_qty_received;
+    });
   }
 
   ngAfterViewChecked(): void{
@@ -335,6 +341,21 @@ export class OrderComponent implements OnInit {
   }
   public cancelOrderChanges(): void{
       $('#globalModalTwo').modal('show');
+  }
+
+  public toogleScanBox(): void{
+      const app = this;
+      if(!$('.toogleScan').is(':checked')){
+          $('#qty_received #txt_qty').hide();
+          $('#qty_received #input_qty_received').show();
+          app.assetCount = $('#qty_received #input_qty_received').val();
+      }
+      else{
+          $('#qty_received #txt_qty').show();
+          $('#qty_received #input_qty_received').hide();
+          app.assetCount = $('#qty_received #txt_qty').html();
+      }
+
   }
 
 }

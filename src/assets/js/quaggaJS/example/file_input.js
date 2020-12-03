@@ -186,7 +186,12 @@ $(function() {
         
         if (!scannedFailedBarcodes.includes(code)){
             try{
-                received = parseInt(document.getElementById('qty_received').innerHTML);
+                if(!$('.toogleScan').is(':checked')){
+                    received = parseInt(document.getElementById('input_qty_received').value);
+                }
+                else{
+                    received = parseInt(document.getElementById('txt_qty').innerHTML);
+                }
                 picked = parseInt(document.getElementById('qty_picked').innerHTML);
             }catch(err){
                 console.log('oopsy woopsy!', err);

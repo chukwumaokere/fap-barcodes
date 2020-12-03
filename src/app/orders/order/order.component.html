@@ -28,12 +28,20 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">{{ orderType == 'PurchaseOrder' ? 'Receive Items' : 'Pick Items' }}</h5>
-                <div>
-                    <button type="button"  class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
-                    &nbsp;
-                <button type="button" class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
-                </div>
+                    <h5 class="modal-title" id="exampleModalLongTitle">{{ orderType == 'PurchaseOrder' ? 'Receive Items' : 'Pick Items' }}</h5>
+                    <div>
+                        Case
+                        <label class="switch">
+                            <input type="checkbox" checked name="toogleScan" class="toogleScan" (click)="toogleScanBox();">
+                            <span class="slider round"></span>
+                        </label>
+                        Box by Box
+                    </div>
+                    <div>
+                        <button type="button"  class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
+                        &nbsp;
+                    <button type="button" class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
+                    </div>
                 <!--
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -49,7 +57,10 @@
                     <div class="row mb-3">
                         <div class="col-md-4" id="item_name">{{productname}}</div>
                         <div class="col-md-4 text-center" id="qty_ordered">{{qty_ordered}}</div>
-                        <div class="col-md-4 text-center" id="qty_received">{{assetCount}}</div>
+                        <div class="col-md-4 text-center" id="qty_received">
+                            <span id="txt_qty">{{assetCount}}</span>
+                            <input type="text" value="{{assetCount}}" id="input_qty_received" class="form-control" style="display:none"/>
+                        </div>
                     </div>
                     <!-- Barcode Scan stuff -->
                     <div class="controls">
