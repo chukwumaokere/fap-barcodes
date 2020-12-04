@@ -123,12 +123,22 @@ export class OrderComponent implements OnInit {
         const data = Object();
         const orderId = this.orderid;
         console.log(this.update);
+        let count_qty = 0;
+        if(this.checkBoxByBox){
+            count_qty = this.assetCountBox;
+        }
+        else{
+            count_qty = this.assetCountCase;
+        }
+
         for (const item of this.update)  {
            // console.log(item);
            const productid = item.productid;
            if (data[productid] == undefined){
                data[productid] = Array();
            }
+           item.count_qty = count_qty;
+           item.checkBoxByBox = this.checkBoxByBox;
            data[productid].push(item);
         }
         const assetsData = Object();
@@ -178,9 +188,6 @@ export class OrderComponent implements OnInit {
       this.reloadScripts = false;
     }
     $('#exampleModalCenter').on('hide.bs.modal', e => {
-      // this.unloadScripts();
-      // console.log('hidden');
-        //$('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
         document.querySelector('ul.thumbnails').innerHTML='';
         try{
           document.querySelector('canvas.imgBuffer').remove();
@@ -205,7 +212,11 @@ export class OrderComponent implements OnInit {
       $('#globalModal').modal('show');
   }
   saveChanges(): void{
-      $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(this.assetCount);
+      var count_qty = this.assetCountBox;
+      if(!this.checkBoxByBox){
+          count_qty = this.assetCountCase;
+      }
+      $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(count_qty);
       if (this.orderType == 'SalesOrder') {
           let picked_all = true;
           $('.items-list tbody tr').each(function () {
@@ -224,15 +235,9 @@ export class OrderComponent implements OnInit {
     console.log(this.update);
   }
   addAsset(code): void{
-      if(this.checkBoxByBox){
-          this.assetCount = this.assetCountBox;
-      }
-      else{
-          this.assetCount = this.assetCountCase;
-      }
       var scanBarCodeSuccess = false;
     console.log('check ', typeof(this.assetCount), typeof(this.qty_ordered));
-    if (this.assetCount < this.qty_ordered){
+    if ((this.assetCountBox < this.qty_ordered && this.checkBoxByBox) || (this.assetCountCase <= this.qty_ordered && !this.checkBoxByBox) ){
       var found = this.update.some(el => el.code === code);
       if (!found){
         var valid_barcodes = this.valid_barcodes;
@@ -276,11 +281,8 @@ export class OrderComponent implements OnInit {
           //Delete most recent barcode thumbnail.
         }
           if(scanBarCodeSuccess){
-              this.assetCount++;
-              if(this.checkBoxByBox){
-                  this.assetCountBox++;
-              }
-              else if(!this.checkBoxByBox && (this.assetCountCase== 0 || this.assetCountCase == '')){
+              this.assetCountBox++;
+              if(this.assetCountCase == 0 || this.assetCountCase == '') {
                   this.assetCountCase++;
               }
           }
@@ -302,7 +304,7 @@ export class OrderComponent implements OnInit {
         app.qty_ordered = Number($(this).find('.itemqty').html());
         app.assetCount = Number($(this).find('.itemqty_received').html());
         app.assetCountBox = app.assetCount;
-        app.assetCountCase = app.assetCountCase;
+        app.assetCountCase = app.assetCount;
         const vb = JSON.parse((this.getElementsByClassName('itemqty')[0] as HTMLElement).dataset.validbarcodes);
         const validBarcodes = Object.values(vb);
         console.log(validBarcodes);
