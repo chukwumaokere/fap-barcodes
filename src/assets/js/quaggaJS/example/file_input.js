@@ -239,4 +239,53 @@ $(function() {
         
         
     });
+
+    $('#wand-input').on('input', function(){
+        var code = $(this).val();
+        if(!code){
+            return false;
+        }
+        if (!scannedFailedBarcodes.includes(code)){
+            try{
+                if(!$('.toogleScan').is(':checked')){
+                    received = parseInt(document.getElementById('input_qty_received').value);
+                }
+                else{
+                    received = parseInt(document.getElementById('txt_qty').innerHTML);
+                }
+                picked = parseInt(document.getElementById('qty_picked').innerHTML);
+            }catch(err){
+                console.log('oopsy woopsy!', err);
+            }
+            if(received < ordered){
+                scannedFailedBarcodes.push(code);
+                var options = {
+                    delay: 2500,
+                };
+                $(".toast").toast(options);
+                var toast = $(".toast");
+                $("#toast-body").html('Barcode Added: ' + code);
+                toast.toast('show');
+                var barcode_type = document.getElementById('code_type')
+                barcode_type.value = 'code_128';
+                barcode_type.dispatchEvent(new Event('change', {bubbles: true}))
+                var barcode_value = document.getElementById('barcode_value')
+                barcode_value.value = code;
+                barcode_value.dispatchEvent(new Event('change', {bubbles: true}));
+                console.log('scannedFailedBarcodes', scannedFailedBarcodes)
+                console.log('The math check', received, picked, ordered, scannedFailedBarcodes);
+            }else{
+                console.log('Well, its all full!', received, picked, ordered, scannedFailedBarcodes);
+                var toast = $(".toast");
+                $("#toast-body").html('All items have already been checked in.');
+                toast.toast('show');
+            }
+        }else{
+            //$("#toast-body").html('Already Existing in array: ' + code);
+            console.log('scannedFailedBarcodes on fail: ', scannedFailedBarcodes)
+            var toast = $(".toast");
+            $("#toast-body").html(code + ' has already been scanned in. Please try a new barcode.');
+            toast.toast('show');
+        }
+    });
 });
