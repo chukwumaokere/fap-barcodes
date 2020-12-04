@@ -40,6 +40,10 @@ export class OrderComponent implements OnInit {
   public dynamicScripts: Array<string> = ["./assets/js/quaggaJS/dist/quagga.js", './assets/js/quaggaJS/example/live_w_locator.js', './assets/js/quaggaJS/example/file_input.js'];
   public reloadScripts: Boolean = true;
 
+    public assetCountBox: Number = 0;
+    public assetCountCase: Number = 0;
+    public checkBoxByBox: Boolean = true;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -85,8 +89,14 @@ export class OrderComponent implements OnInit {
 
     document.getElementById('input_qty_received').addEventListener('change', (e) => {
         // console.log('event registered', e);
-        const input_qty_received = e.target['value'];
-        app.assetCount = input_qty_received;
+        let input_qty_received = e.target['value'];
+        var ordered = parseInt(document.getElementById('qty_ordered').innerHTML);
+        if(input_qty_received > ordered){
+            this.utilsService.showToast('Please enter a value lower than or equal Order Quantity.');
+            input_qty_received = ordered;
+        }
+        $('#input_qty_received').val(input_qty_received);
+        app.assetCountCase = input_qty_received;
     });
   }
 
@@ -214,6 +224,13 @@ export class OrderComponent implements OnInit {
     console.log(this.update);
   }
   addAsset(code): void{
+      if(this.checkBoxByBox){
+          this.assetCount = this.assetCountBox;
+      }
+      else{
+          this.assetCount = this.assetCountCase;
+      }
+      var scanBarCodeSuccess = false;
     console.log('check ', typeof(this.assetCount), typeof(this.qty_ordered));
     if (this.assetCount < this.qty_ordered){
       var found = this.update.some(el => el.code === code);
@@ -233,7 +250,7 @@ export class OrderComponent implements OnInit {
           }
           this.update.push(update_a);
           console.log(this.update);
-          this.assetCount++;
+            scanBarCodeSuccess = true;
         }else if (this.orderType == 'PurchaseOrder'){
           if (this.orderType == 'PurchaseOrder'){
             status = 'Received';
@@ -247,7 +264,7 @@ export class OrderComponent implements OnInit {
           };
           this.update.push(update_a);
           console.log(this.update);
-          this.assetCount++;
+            scanBarCodeSuccess = true;
         }else{
           try {
             console.log('deleting newly scanned item')
@@ -258,6 +275,15 @@ export class OrderComponent implements OnInit {
           this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
           //Delete most recent barcode thumbnail.
         }
+          if(scanBarCodeSuccess){
+              this.assetCount++;
+              if(this.checkBoxByBox){
+                  this.assetCountBox++;
+              }
+              else if(!this.checkBoxByBox && (this.assetCountCase== 0 || this.assetCountCase == '')){
+                  this.assetCountCase++;
+              }
+          }
       }else{
         this.utilsService.showToast('This barcode has already been scanned and assigned previously');
       }
@@ -275,6 +301,8 @@ export class OrderComponent implements OnInit {
         const productname = $(this).find('.lineItemName').html();
         app.qty_ordered = Number($(this).find('.itemqty').html());
         app.assetCount = Number($(this).find('.itemqty_received').html());
+        app.assetCountBox = app.assetCount;
+        app.assetCountCase = app.assetCountCase;
         const vb = JSON.parse((this.getElementsByClassName('itemqty')[0] as HTMLElement).dataset.validbarcodes);
         const validBarcodes = Object.values(vb);
         console.log(validBarcodes);
@@ -348,12 +376,14 @@ export class OrderComponent implements OnInit {
       if(!$('.toogleScan').is(':checked')){
           $('#qty_received #txt_qty').hide();
           $('#qty_received #input_qty_received').show();
-          app.assetCount = $('#qty_received #input_qty_received').val();
+          app.assetCountCase = $('#qty_received #input_qty_received').val();
+          app.checkBoxByBox = false;
       }
       else{
           $('#qty_received #txt_qty').show();
           $('#qty_received #input_qty_received').hide();
-          app.assetCount = $('#qty_received #txt_qty').html();
+          app.assetCountBox = $('#qty_received #txt_qty').html();
+          app.checkBoxByBox = true;
       }
 
   }
