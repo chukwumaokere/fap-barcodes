@@ -249,15 +249,17 @@ $(function() {
             try{
                 if(!$('.toogleScan').is(':checked')){
                     received = parseInt(document.getElementById('input_qty_received').value);
+                    checkBoxByBox = false;
                 }
                 else{
                     received = parseInt(document.getElementById('txt_qty').innerHTML);
+                    checkBoxByBox = true;
                 }
                 picked = parseInt(document.getElementById('qty_picked').innerHTML);
             }catch(err){
                 console.log('oopsy woopsy!', err);
             }
-            if(received < ordered){
+            if((received < ordered && checkBoxByBox) || (received <= ordered && !checkBoxByBox)){
                 scannedFailedBarcodes.push(code);
                 var options = {
                     delay: 2500,
