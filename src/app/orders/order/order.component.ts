@@ -40,8 +40,8 @@ export class OrderComponent implements OnInit {
   public dynamicScripts: Array<string> = ["./assets/js/quaggaJS/dist/quagga.js", './assets/js/quaggaJS/example/live_w_locator.js', './assets/js/quaggaJS/example/file_input.js'];
   public reloadScripts: Boolean = true;
 
-    public assetCountBox: Number = 0;
-    public assetCountCase: Number = 0;
+    public assetCountBox: any;
+    public assetCountCase: any;
     public checkBoxByBox: Boolean = true;
 
   constructor(
