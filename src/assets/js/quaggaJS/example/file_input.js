@@ -276,11 +276,13 @@ $(function() {
                 barcode_value.dispatchEvent(new Event('change', {bubbles: true}));
                 console.log('scannedFailedBarcodes', scannedFailedBarcodes)
                 console.log('The math check', received, picked, ordered, scannedFailedBarcodes);
+                $('#wand-input').val('');
             }else{
                 console.log('Well, its all full!', received, picked, ordered, scannedFailedBarcodes);
                 var toast = $(".toast");
                 $("#toast-body").html('All items have already been checked in.');
                 toast.toast('show');
+                $('#wand-input').val('');
             }
         }else{
             //$("#toast-body").html('Already Existing in array: ' + code);
