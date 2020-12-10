@@ -123,22 +123,12 @@ export class OrderComponent implements OnInit {
         const data = Object();
         const orderId = this.orderid;
         console.log(this.update);
-        let count_qty = 0;
-        if(this.checkBoxByBox){
-            count_qty = this.assetCountBox;
-        }
-        else{
-            count_qty = this.assetCountCase;
-        }
-
         for (const item of this.update)  {
            // console.log(item);
            const productid = item.productid;
            if (data[productid] == undefined){
                data[productid] = Array();
            }
-           item.count_qty = count_qty;
-           item.checkBoxByBox = this.checkBoxByBox;
            data[productid].push(item);
         }
         const assetsData = Object();
@@ -195,7 +185,7 @@ export class OrderComponent implements OnInit {
         }catch(err){
           console.log('doesn\'t exist or cant remove', err);
         }
-        
+
     });
   }
   cancelChanges(): void{
@@ -236,62 +226,68 @@ export class OrderComponent implements OnInit {
   }
   addAsset(code): void{
       var scanBarCodeSuccess = false;
-    console.log('check ', typeof(this.assetCount), typeof(this.qty_ordered));
-    if ((this.assetCountBox < this.qty_ordered && this.checkBoxByBox) || (this.assetCountCase <= this.qty_ordered && !this.checkBoxByBox) ){
-      var found = this.update.some(el => el.code === code);
-      if (!found){
-        var valid_barcodes = this.valid_barcodes;
-        if (this.orderType == 'SalesOrder' && valid_barcodes.includes(code)){
-          var status;
-          if (this.orderType == 'SalesOrder'){
-            status = 'Picked';
-          }
-          var update_a = {
-            productname: this.productname,
-            code: code,
-            status: status,
-            productid: this.productid,
-            lineitemid: this.lineitemid
-          }
-          this.update.push(update_a);
-          console.log(this.update);
-            scanBarCodeSuccess = true;
-        }else if (this.orderType == 'PurchaseOrder'){
-          if (this.orderType == 'PurchaseOrder'){
-            status = 'Received';
-          }
-          const update_a = {
-              productname: this.productname,
-              code: code,
-              status: status,
-              productid: this.productid,
-              lineitemid: this.lineitemid
-          };
-          this.update.push(update_a);
-          console.log(this.update);
-            scanBarCodeSuccess = true;
-        }else{
-          try {
-            console.log('deleting newly scanned item')
-            document.getElementsByClassName('thumbnails')[0].firstChild.remove();
-          }catch(err){
-            console.log('failed to deleted ', err);
-          }
-          this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
-          //Delete most recent barcode thumbnail.
-        }
-          if(scanBarCodeSuccess){
-              this.assetCountBox++;
-              if(this.assetCountCase == 0 || this.assetCountCase == '') {
-                  this.assetCountCase++;
+      var update_a = {};
+      console.log('check ', typeof(this.assetCount), typeof(this.qty_ordered));
+      if ((this.assetCountBox < this.qty_ordered && this.checkBoxByBox) || (this.assetCountCase <= this.qty_ordered && !this.checkBoxByBox) ){
+          var found = this.update.some(el => el.code === code);
+          if (!found){
+              var valid_barcodes = this.valid_barcodes;
+              if (this.orderType == 'SalesOrder' && valid_barcodes.includes(code)){
+                  var status;
+                  if (this.orderType == 'SalesOrder'){
+                    status = 'Picked';
+                  }
+                  update_a = {
+                    productname: this.productname,
+                    code: code,
+                    status: status,
+                    productid: this.productid,
+                    lineitemid: this.lineitemid
+                  }
+                  scanBarCodeSuccess = true;
+              }else if (this.orderType == 'PurchaseOrder'){
+                  if (this.orderType == 'PurchaseOrder'){
+                    status = 'Received';
+                  }
+                  update_a = {
+                      productname: this.productname,
+                      code: code,
+                      status: status,
+                      productid: this.productid,
+                      lineitemid: this.lineitemid
+                  };
+                  scanBarCodeSuccess = true;
+              }else{
+                  try {
+                      console.log('deleting newly scanned item')
+                      document.getElementsByClassName('thumbnails')[0].firstChild.remove();
+                  }catch(err){
+                      console.log('failed to deleted ', err);
+                  }
+              this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
+              //Delete most recent barcode thumbnail.
               }
+              if(scanBarCodeSuccess){
+                  this.assetCountBox++;
+                  if(this.assetCountCase == 0 || this.assetCountCase == '') {
+                      this.assetCountCase++;
+                  }
+                  if(this.checkBoxByBox){
+                      update_a.count_qty = this.assetCountBox;
+                  }
+                  else{
+                      update_a.count_qty = this.assetCountCase;
+                  }
+                  update_a.checkBoxByBox = this.checkBoxByBox;
+                  this.update.push(update_a);
+                  console.log(this.update);
+              }
+          }else{
+              this.utilsService.showToast('This barcode has already been scanned and assigned previously');
           }
       }else{
-        this.utilsService.showToast('This barcode has already been scanned and assigned previously');
+        this.utilsService.showToast('All items have already been checked in.');
       }
-    }else{
-      this.utilsService.showToast('All items have already been checked in.');
-    }
   }
 
   initClickableRows(): void{
