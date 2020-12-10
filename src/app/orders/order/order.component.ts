@@ -226,7 +226,6 @@ export class OrderComponent implements OnInit {
   }
   addAsset(code): void{
       var scanBarCodeSuccess = false;
-      var update_a = {};
       console.log('check ', typeof(this.assetCount), typeof(this.qty_ordered));
       if ((this.assetCountBox < this.qty_ordered && this.checkBoxByBox) || (this.assetCountCase <= this.qty_ordered && !this.checkBoxByBox) ){
           var found = this.update.some(el => el.code === code);
@@ -237,25 +236,11 @@ export class OrderComponent implements OnInit {
                   if (this.orderType == 'SalesOrder'){
                     status = 'Picked';
                   }
-                  update_a = {
-                    productname: this.productname,
-                    code: code,
-                    status: status,
-                    productid: this.productid,
-                    lineitemid: this.lineitemid
-                  }
                   scanBarCodeSuccess = true;
               }else if (this.orderType == 'PurchaseOrder'){
                   if (this.orderType == 'PurchaseOrder'){
                     status = 'Received';
                   }
-                  update_a = {
-                      productname: this.productname,
-                      code: code,
-                      status: status,
-                      productid: this.productid,
-                      lineitemid: this.lineitemid
-                  };
                   scanBarCodeSuccess = true;
               }else{
                   try {
@@ -273,12 +258,20 @@ export class OrderComponent implements OnInit {
                       this.assetCountCase++;
                   }
                   if(this.checkBoxByBox){
-                      update_a.count_qty = this.assetCountBox;
+                      var count_qty = this.assetCountBox;
                   }
                   else{
-                      update_a.count_qty = this.assetCountCase;
+                      var count_qty = this.assetCountCase;
                   }
-                  update_a.checkBoxByBox = this.checkBoxByBox;
+                  var update_a = {
+                      productname: this.productname,
+                      code: code,
+                      status: status,
+                      productid: this.productid,
+                      lineitemid: this.lineitemid,
+                      checkBoxByBox: this.checkBoxByBox,
+                      count_qty: count_qty
+                  };
                   this.update.push(update_a);
                   console.log(this.update);
               }
