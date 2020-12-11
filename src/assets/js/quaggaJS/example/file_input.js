@@ -256,6 +256,7 @@ $(function() {
                     checkBoxByBox = true;
                 }
                 picked = parseInt(document.getElementById('qty_picked').innerHTML);
+                ordered = parseInt(document.getElementById('qty_ordered').innerHTML);
             }catch(err){
                 console.log('oopsy woopsy!', err);
             }
