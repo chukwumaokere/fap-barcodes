@@ -201,29 +201,34 @@ export class OrderComponent implements OnInit {
       $('#exampleModalCenter').modal('hide');
       $('#globalModal').modal('show');
   }
-  saveChanges(): void{
-      var count_qty = this.assetCountBox;
-      if(!this.checkBoxByBox){
+
+    saveChanges(): void{
+        let count_qty = this.assetCountBox;
+        if (!this.checkBoxByBox){
           count_qty = this.assetCountCase;
-      }
-      $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']').closest('tr').find('td.itemqty_received').html(count_qty);
-      if (this.orderType == 'SalesOrder') {
-          let picked_all = true;
-          $('.items-list tbody tr').each(function () {
-              var qty = $(this).find('td.itemqty').html();
-              var qty_received = $(this).find('td.itemqty_received').html();
-              if (qty != qty_received) {
-                  picked_all = false;
-                  return false;
-              }
-          });
-          if (picked_all) {
-              $('span.OrderStatus').html('Picked');
-          }
-      }
-      $('#exampleModalCenter').modal('hide');
-    console.log(this.update);
-  }
+        }
+        const lineItemName = $('td.lineItemName[data-lineitemid=' + this.lineitemid + ']');
+        const lineItem = lineItemName.closest('tr');
+        lineItem.find('td.itemqty_received').html(count_qty);
+        const lineItemIndex = lineItem.data('index');
+        if (this.orderType == 'SalesOrder') {
+            let picked_all = true;
+            $('.items-list tbody tr').each(() => {
+                var qty = $(this).find('td.itemqty').html();
+                var qty_received = $(this).find('td.itemqty_received').html();
+                if (qty != qty_received) {
+                    picked_all = false;
+                    return false;
+                }
+            });
+            if (picked_all) {
+                $('span.OrderStatus').html('Picked');
+            }
+        }
+        $('#exampleModalCenter').modal('hide');
+        this.update[lineItemIndex]['count_qty'] = count_qty;
+    }
+
   addAsset(code): void{
       var scanBarCodeSuccess = false;
       console.log('check ', typeof(this.assetCount), typeof(this.qty_ordered));
