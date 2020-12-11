@@ -195,6 +195,7 @@ $(function() {
                     checkBoxByBox = true;
                 }
                 //picked = parseInt(document.getElementById('qty_picked').innerHTML);
+				ordered = parseInt(document.getElementById('qty_ordered').innerHTML);
             }catch(err){
                 console.log('oopsy woopsy!', err);
             }
@@ -255,7 +256,7 @@ $(function() {
                     received = parseInt(document.getElementById('txt_qty').innerHTML);
                     checkBoxByBox = true;
                 }
-                picked = parseInt(document.getElementById('qty_picked').innerHTML);
+                //picked = parseInt(document.getElementById('qty_picked').innerHTML);
                 ordered = parseInt(document.getElementById('qty_ordered').innerHTML);
             }catch(err){
                 console.log('oopsy woopsy!', err);
