@@ -183,7 +183,11 @@ $(function() {
         var code = result.codeResult.code,
             $node,
             canvas = Quagga.canvas.dom.image;
-        
+        try{   
+			ordered = parseInt(document.getElementById('qty_ordered').innerHTML);
+		}catch(err){
+			console.log('oopsy woopsy!', err);
+		}
         if (!scannedFailedBarcodes.includes(code)){
             try{
                 if(!$('.toogleScan').is(':checked')){
