@@ -170,8 +170,17 @@ $(function() {
                 drawingCtx.strokeStyle = "#0F0";
                 drawingCtx.strokeRect(area.x, area.y, area.width, area.height);
             }
-    }
+        }
     });
+
+    function removeRecentBarcode(){
+        scannedFailedBarcodes.pop();
+        console.log('most recent barcode removed, ', scannedFailedBarcodes);
+    }
+    document.getElementById('remove_barcode_trigger').addEventListener('click', function(){
+        removeRecentBarcode();
+    })
+
     var scannedFailedBarcodes = [];
     var ordered, received, picked, checkBoxByBox;
     try{   
