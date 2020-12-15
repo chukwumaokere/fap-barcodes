@@ -174,7 +174,8 @@ $(function() {
     });
 
     function removeRecentBarcode(){
-        scannedFailedBarcodes.pop();
+        //scannedFailedBarcodes.pop();
+        scannedFailedBarcodes = [];
         console.log('most recent barcode removed, ', scannedFailedBarcodes);
     }
     document.getElementById('remove_barcode_trigger').addEventListener('click', function(){
