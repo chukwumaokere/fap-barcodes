@@ -173,12 +173,18 @@ $(function() {
         }
     });
 
-    function removeRecentBarcode(){
-        //scannedFailedBarcodes.pop();
+    function removeAllBarcodes(){
         scannedFailedBarcodes = [];
+        console.log('all barcodes removed, ', scannedFailedBarcodes);
+    }
+    function removeRecentBarcode(){
+        scannedFailedBarcodes.pop();
         console.log('most recent barcode removed, ', scannedFailedBarcodes);
     }
-    document.getElementById('remove_barcode_trigger').addEventListener('click', function(){
+    document.getElementById('remove_barcodes_trigger').addEventListener('click', function(){
+        removeAllBarcodes();
+    })
+    document.getElementById('trigger_on_fail').addEventListener('change', function(){
         removeRecentBarcode();
     })
 
@@ -238,6 +244,7 @@ $(function() {
                 console.log('scannedFailedBarcodes', scannedFailedBarcodes)
                 console.log('The math check', received, picked, ordered, scannedFailedBarcodes);
             }else{
+                removeRecentBarcode();
                 console.log('Well, its all full!', received, picked, ordered, scannedFailedBarcodes);
                 var toast = $(".toast");
                 $("#toast-body").html('All items have already been checked in.');

@@ -181,7 +181,7 @@
                     <div class="modal-body" id="modal-body-container">
                         <h5>Are you sure you'd like to cancel your changes?</h5>
                         <div align="center" style="margin-top: 10px">
-                            <button type="button" class="btn btn-primary" style="margin-right: 10px"  data-dismiss="modal" id="remove_barcode_trigger">Confirm</button>
+                            <button type="button" class="btn btn-primary" style="margin-right: 10px"  data-dismiss="modal" id="remove_barcodes_trigger">Confirm</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#exampleModalCenter').modal('show');">Cancel</button>
                         </div>
                     </div>
@@ -203,8 +203,15 @@
                     </div>
                 </div>
             </div>
+
+        <!-- Hidden input to remove failed barcode -->
+        <input type="hidden" id="trigger_on_fail" name="trigger_on_fail">
+        <!-- Hidden input to remove failed barcode -->
+        
         </div>
         <!-- Cancel Order Alert-->
+
+
 
         <div class="top-section mt-3" *ngIf="orderType == 'PurchaseOrder'">
             <div class="row">

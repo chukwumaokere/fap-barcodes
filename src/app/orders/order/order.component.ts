@@ -254,8 +254,9 @@ export class OrderComponent implements OnInit {
                   }catch(err){
                       console.log('failed to deleted ', err);
                   }
-              this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
-              //Delete most recent barcode thumbnail.
+                document.getElementById('trigger_on_fail').dispatchEvent(new Event('change', {bubbles:true}));
+                this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
+                //Delete most recent barcode thumbnail.
               }
               if(scanBarCodeSuccess){
                   this.assetCountBox++;
