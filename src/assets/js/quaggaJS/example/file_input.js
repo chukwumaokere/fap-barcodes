@@ -255,6 +255,7 @@ $(function() {
     });
 
     $('#wand-input').on('input', function(){
+        var _this = $(this);
         var code = $(this).val();
         if(!code){
             return false;
@@ -300,6 +301,7 @@ $(function() {
                 $('#wand-input').val('');
             }
         }else{
+            _this.select();
             //$("#toast-body").html('Already Existing in array: ' + code);
             console.log('scannedFailedBarcodes on fail: ', scannedFailedBarcodes)
             var toast = $(".toast");

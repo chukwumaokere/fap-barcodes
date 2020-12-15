@@ -48,7 +48,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 -->
-                </div>
+                </div>PO Number
                 <div class="modal-body">
                     <div class="row">
                             <div class="col-md-4">Item Name</div>
@@ -216,7 +216,7 @@
                 <p class="col-sm">Status: <span class="OrderStatus">{{ orderDetail ?  orderDetail['postatus'] : '' }}</span></p>
             </div>
             <div class="row">
-                <p class="col-sm">PO Number: {{ orderDetail ?  orderDetail['purchaseorder_no'] : '' }}</p>
+                <p class="col-sm">PO Number: {{ orderDetail ?  orderDetail['requisition_no'] : '' }}</p>
                 <p class="col-sm">Date : {{ orderDetail ?  orderDetail['duedate'] : '' }}</p>
             </div>
             <div class="row">
