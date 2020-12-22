@@ -301,6 +301,12 @@ $(function() {
                 console.log('scannedFailedBarcodes', scannedFailedBarcodes)
                 console.log('The math check', received, picked, ordered, scannedFailedBarcodes);
                 $('#wand-input').val('');
+                let $node;
+                $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
+                const code_barcode = convertStringToBarcode(code);
+                $node.find("img").attr("src", code_barcode);
+                $node.find("h4.code").html(code);
+                $("#result_strip ul.thumbnails").prepend($node);
             }else{
                 console.log('Well, its all full!', received, picked, ordered, scannedFailedBarcodes);
                 var toast = $(".toast");
@@ -317,4 +323,10 @@ $(function() {
             toast.toast('show');
         }
     });
+    
+    function convertStringToBarcode(str) {
+        var canvas = document.createElement("canvas");
+        JsBarcode(canvas, str, {format: "CODE128"});
+        return canvas.toDataURL("image/png");
+    }
 });
