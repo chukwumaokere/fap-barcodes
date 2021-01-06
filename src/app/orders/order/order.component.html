@@ -31,12 +31,12 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">{{ orderType == 'PurchaseOrder' ? 'Receive Items' : 'Pick Items' }}</h5>
                     <div>
-                        Case
+                        Pallet
                         <label class="switch">
                             <input type="checkbox" checked name="toogleScan" class="toogleScan" (click)="toogleScanBox();">
                             <span class="slider round"></span>
                         </label>
-                        Box by Box
+                        Case by Case
                     </div>
                     <div>
                         <button type="button"  class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
