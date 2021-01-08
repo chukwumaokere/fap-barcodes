@@ -262,9 +262,20 @@ $(function() {
         
     });
 
+    document.addEventListener('keydown', function(e){
+        var keypressed = e.keyCode;
+        console.log(keypressed);
+        if(keypressed == 9){
+            e.preventDefault();
+            document.getElementById('wand-input').dispatchEvent(new KeyboardEvent('keypress', {'keyCode': '13'}))
+        }
+    })
+
     $('#wand-input').on('keypress', function (e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
-        if(keycode == '13'){
+        console.log(keycode);
+        if(keycode == '9' || keycode == '13'){
+            e.preventDefault();
             var _this = $(this);
             var code = $(this).val();
             if(!code){
@@ -326,6 +337,7 @@ $(function() {
                 var toast = $(".toast");
                 $("#toast-body").html(code + ' has already been scanned in. Please try a new barcode.');
                 toast.toast('show');
+                $('#wand-input').val('');
             }
         }
     });
