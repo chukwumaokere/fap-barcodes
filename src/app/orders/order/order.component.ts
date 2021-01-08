@@ -242,11 +242,13 @@ export class OrderComponent implements OnInit {
                     status = 'Picked';
                   }
                   scanBarCodeSuccess = true;
+                  document.getElementById('wand-input').dispatchEvent(new Event('scan_success', {bubbles: true}));
               }else if (this.orderType == 'PurchaseOrder'){
                   if (this.orderType == 'PurchaseOrder'){
                     status = 'Received';
                   }
                   scanBarCodeSuccess = true;
+                  document.getElementById('wand-input').dispatchEvent(new Event('scan_success', {bubbles: true}));
               }else{
                   try {
                       console.log('deleting newly scanned item')

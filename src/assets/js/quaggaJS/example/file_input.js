@@ -302,6 +302,7 @@ $(function() {
                     barcode_value.dispatchEvent(new Event('change', {bubbles: true}));
                     console.log('scannedFailedBarcodes', scannedFailedBarcodes)
                     console.log('The math check', received, picked, ordered, scannedFailedBarcodes);
+                    /*
                     $('#wand-input').val('');
                     let $node;
                     $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
@@ -309,6 +310,7 @@ $(function() {
                     $node.find("img").attr("src", code_barcode);
                     $node.find("h4.code").html(code);
                     $("#result_strip ul.thumbnails").prepend($node);
+                    */
                 }else{
                     console.log('Well, its all full!', received, picked, ordered, scannedFailedBarcodes);
                     var toast = $(".toast");
@@ -317,7 +319,8 @@ $(function() {
                     $('#wand-input').val('');
                 }
             }else{
-                _this.select();
+                //_this.select();
+                $('#wand-input').trigger('scan_failed');
                 //$("#toast-body").html('Already Existing in array: ' + code);
                 console.log('scannedFailedBarcodes on fail: ', scannedFailedBarcodes)
                 var toast = $(".toast");
@@ -326,7 +329,22 @@ $(function() {
             }
         }
     });
-    
+
+    $('#wand-input').on('scan_success', function (e) {
+        let code = $(this).val();
+        let $node;
+        $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
+        const code_barcode = convertStringToBarcode(code);
+        $node.find("img").attr("src", code_barcode);
+        $node.find("h4.code").html(code);
+        $("#result_strip ul.thumbnails").prepend($node);
+        $(this).val('');
+    });
+
+    $('#wand-input').on('scan_failed', function (e) {
+        $(this).select();
+    });
+
     function convertStringToBarcode(str) {
         var canvas = document.createElement("canvas");
         JsBarcode(canvas, str, {format: "CODE128"});
