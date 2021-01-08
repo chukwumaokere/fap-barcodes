@@ -257,6 +257,7 @@ export class OrderComponent implements OnInit {
                       console.log('failed to deleted ', err);
                   }
                 document.getElementById('trigger_on_fail').dispatchEvent(new Event('change', {bubbles:true}));
+                  document.getElementById('wand-input').dispatchEvent(new Event('scan_failed', {bubbles: true}));
                 this.utilsService.showToast('This barcode is not a valid barcode for this order/product');
                 //Delete most recent barcode thumbnail.
               }
