@@ -1,24 +1,25 @@
 <app-navbar></app-navbar>
 <div class="fake-body">
     <div class="container">
-      <!-- Toast Position it -->
-      <div style="position: absolute; top: 0; right: 0; z-index:10;">
-        <!-- Then put toasts within -->
-        <div class="toast m-3 mt-4" id="notif" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 300px;">
-          <div class="toast-header">
-            <img src="" class="rounded mr-2" alt="">
-            <strong class="mr-auto">Orders Loaded</strong>
-            <small class="text-muted">just now</small>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="toast-body" id="toast-body" >
-            Orders loaded from:
-          </div>
+        <!-- Toast Position it -->
+        <div style="position: absolute; top: 0; right: 0; z-index:10;">
+            <!-- Then put toasts within -->
+            <div class="toast m-3 mt-4" id="notif" role="alert" aria-live="assertive" aria-atomic="true"
+                 style="min-width: 300px;">
+                <div class="toast-header">
+                    <img src="" class="rounded mr-2" alt="">
+                    <strong class="mr-auto">Orders Loaded</strong>
+                    <small class="text-muted">just now</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body" id="toast-body">
+                    Orders loaded from:
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- /Toast Position it -->
+        <!-- /Toast Position it -->
 
         <div class="mt-3">
             <div class="btn-group btn-group-lg btn-group-toggle" data-toggle="buttons" aria-label="View Select">
@@ -34,6 +35,8 @@
                 </label>
                 -->
             </div>
+
+            <div class="btn btn-primary btn-lg btn-success" style="margin-left: 20px;width: 80px;" (click)="openScanBarcodePopup();">POS</div>
             <!-- Hiding because we're using datatable search instead -->
             <!--
             <div class="float-right">
@@ -52,5 +55,101 @@
         <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="line-scale">
             <p style="color: white">Please Wait... </p>
         </ngx-spinner>
+
+        <!-- Modal -->
+        <div class="modal fade" id="barcodeScanPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Receive Items</h5>
+                        <div>
+                            Pallet
+                            <label class="switch">
+                                <input type="checkbox" checked name="toogleScan" class="toogleScan" (click)="toogleScanBox();"/>
+                                <span class="slider round"></span>
+                            </label>
+                            Case by Case
+                        </div>
+                        <div>
+                            <button type="button"  class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-primary" >Save Changes</button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 row">
+                                <div class="col-md-4">SO #</div>
+                                <div class="col-md-8"><input class="form-control"/></div>
+                            </div>
+                            <div class="col-md-6 row">
+                                <div class="col-md-4">Dealer</div>
+                                <div class="col-md-8"><input class="form-control"/></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 row">
+                                <div class="col-md-4">Vendor Name</div>
+                                <div class="col-md-8"><input class="form-control"/></div>
+                            </div>
+                            <div class="col-md-6 row">
+                                <div class="col-md-4">Contact Name</div>
+                                <div class="col-md-8"><input class="form-control"/></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 row">
+                                <div class="col-md-4">Job Name</div>
+                                <div class="col-md-8"><input class="form-control"/></div>
+                            </div>
+                            <div class="col-md-6 row">
+                                <div class="col-md-4">Date</div>
+                                <div class="col-md-8"><input class="form-control"/></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">Item Name</div>
+                            <div class="col-md-4 text-center">Ordered Qty</div>
+                            <div class="col-md-4 text-center">Picked Quantity</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4" id="item_name"></div>
+                            <div class="col-md-4 text-center" id="qty_ordered"></div>
+                            <div class="col-md-4 text-center" id="qty_received">
+                                <span id="txt_qty"></span>
+                                <input type="text" value="" id="input_qty_received" class="form-control" style="display:none"/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 text-left">Wand Scanning Input</div>
+                            <div class="col-md-4 text-center">
+                                <input type="text" value="" id="wand-input" class="form-control" style=""/>
+                            </div>
+                        </div>
+                        <!-- Barcode Scan stuff -->
+                        <div class="controls">
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"  accept="image/*;capture=camera">
+                                    <label class="custom-file-label" for="inputGroupFile04">Take or Upload a Photo...</label>
+                                </div>
+                            </div>
+                            <br>
+                            <p>Scanned Barcodes:</p>
+                        </div>
+                        <div id="result_strip">
+                            <ul class="thumbnails"></ul>
+                            <ul class="collector"></ul>
+                        </div>
+                        <div id="interactive" class="viewport"></div>
+                        <div id="debug" class="detection"></div>
+                        <input id="code_type" hidden value="">
+                        <input id="barcode_value" hidden value="">
+                        <!-- /Barcode Scan Stuff -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Modal -->
     </div>
 </div>

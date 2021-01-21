@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DataTable } from 'simple-datatables';
 import { OfflineDetectorService } from '../services/offline-detector.service';
 /*import { OrdersService } from '../services/orders.service';*/
-import  Dexie from 'dexie';
+import Dexie from 'dexie';
 import {UtilsService} from '../services/utils.service';
 import {ApiRequestService} from '../services/api-request.service';
 import {DatabaseService} from '../services/database.service';
@@ -30,6 +30,11 @@ export class OrdersComponent implements OnInit {
   tableview: any;
   datatable: any;
   online: boolean;
+    public dynamicScripts: Array<string> = ['./assets/js/quaggaJS/dist/quagga.js', './assets/js/quaggaJS/example/live_w_locator.js', './assets/js/quaggaJS/example/file_input.js', './assets/js/JsBarcode.js'];
+    public reloadScripts = true;
+    public assetCountBox: any;
+    public assetCountCase: any;
+    public checkBoxByBox = true;
 
   dataReturned: any;
 
@@ -238,4 +243,64 @@ export class OrdersComponent implements OnInit {
       this.initializeTable(this.data.PurchaseOrder);
   }
 
+    public openScanBarcodePopup(): void {
+        $('#barcodeScanPopup').modal('show');
+        if (this.reloadScripts === true){
+            this.loadScript();
+            this.reloadScripts = false;
+        }
+        $('#barcodeScanPopup').on('hide.bs.modal', e => {
+            document.querySelector('ul.thumbnails').innerHTML = '';
+            try{
+                document.querySelector('canvas.imgBuffer').remove();
+                document.querySelector('canvas.drawingBuffer').remove();
+            } catch (err){
+                console.log('doesn\'t exist or cant remove', err);
+            }
+
+        });
+    }
+
+    public loadScript(): void {
+        let isFound = false;
+        const scripts = document.getElementsByTagName('script');
+        // tslint:disable-next-line:prefer-for-of
+        for (let i = 0; i < scripts.length; ++i) {
+            if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes('loader')) {
+                isFound = true;
+            }
+        }
+        if (!isFound) {
+            const dynamicScripts = this.dynamicScripts;
+            // tslint:disable-next-line:prefer-for-of
+            for (let i = 0; i < dynamicScripts.length; i++) {
+                const node = document.createElement('script');
+                const body = document.body as HTMLDivElement;
+                node.src = dynamicScripts [i];
+                node.type = 'text/javascript';
+                node.async = false;
+                node.charset = 'utf-8';
+                body.appendChild(node);
+            }
+        }
+    }
+
+    public toogleScanBox(): void{
+        const app = this;
+        if (!$('.toogleScan').is(':checked')){
+            $('#qty_received #txt_qty').hide();
+            $('#qty_received #input_qty_received').show();
+            app.assetCountCase = $('#qty_received #input_qty_received').val();
+            app.checkBoxByBox = false;
+        } else{
+            $('#qty_received #txt_qty').show();
+            $('#qty_received #input_qty_received').hide();
+            app.assetCountBox = $('#qty_received #txt_qty').html();
+            app.checkBoxByBox = true;
+        }
+    }
+
+    public cancelChanges(): void{
+        $('#barcodeScanPopup').modal('hide');
+    }
 }
