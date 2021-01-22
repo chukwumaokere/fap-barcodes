@@ -58,7 +58,8 @@
 
         <!-- Modal -->
         <div class="modal fade" id="barcodeScanPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div id="barcode-scan-event"></div>
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 950px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Receive Items</h5>
@@ -70,14 +71,9 @@
                             </label>
                             Case by Case
                         </div>
-                        <div>
-                            <button type="button"  class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
-                            &nbsp;
-                            <button type="button" class="btn btn-primary" >Save Changes</button>
-                        </div>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
+                        <div class="row form-group">
                             <div class="col-md-6 row">
                                 <div class="col-md-4">SO #</div>
                                 <div class="col-md-8"><input class="form-control"/></div>
@@ -87,7 +83,7 @@
                                 <div class="col-md-8"><input class="form-control"/></div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row form-group">
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Vendor Name</div>
                                 <div class="col-md-8"><input class="form-control"/></div>
@@ -97,7 +93,7 @@
                                 <div class="col-md-8"><input class="form-control"/></div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row form-group">
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Job Name</div>
                                 <div class="col-md-8"><input class="form-control"/></div>
@@ -107,18 +103,12 @@
                                 <div class="col-md-8"><input class="form-control"/></div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">Item Name</div>
-                            <div class="col-md-4 text-center">Ordered Qty</div>
-                            <div class="col-md-4 text-center">Picked Quantity</div>
+                        <div class="row form-group">
+                            <div class="col-md-6">Item Name</div>
+                            <div class="col-md-6 text-center">Picked Quantity</div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4" id="item_name"></div>
-                            <div class="col-md-4 text-center" id="qty_ordered"></div>
-                            <div class="col-md-4 text-center" id="qty_received">
-                                <span id="txt_qty"></span>
-                                <input type="text" value="" id="input_qty_received" class="form-control" style="display:none"/>
-                            </div>
+                        <div id="popup-list-item">
+
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 text-left">Wand Scanning Input</div>
@@ -146,6 +136,12 @@
                         <input id="code_type" hidden value="">
                         <input id="barcode_value" hidden value="">
                         <!-- /Barcode Scan Stuff -->
+                    </div>
+                    <div class="modal-footer">
+                        <div style="margin: 0 auto;">
+                            <button type="button" class="btn btn-primary" style="margin-right: 10px;">Save Changes</button>
+                            <button type="button"  class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
+                        </div>
                     </div>
                 </div>
             </div>

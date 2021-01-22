@@ -30,7 +30,14 @@ export class OrdersComponent implements OnInit {
   tableview: any;
   datatable: any;
   online: boolean;
-    public dynamicScripts: Array<string> = ['./assets/js/quaggaJS/dist/quagga.js', './assets/js/quaggaJS/example/live_w_locator.js', './assets/js/quaggaJS/example/file_input.js', './assets/js/JsBarcode.js'];
+    public dynamicScripts: Array<string> = [
+        './assets/js/quaggaJS/dist/quagga.js',
+        './assets/js/JsBarcode.js',
+        './assets/js/barcode-locator.js',
+        './assets/js/barcode-input.js',
+        './assets/js/barcode-wand.js',
+        './assets/js/barcode-popup-list.js'
+    ];
     public reloadScripts = true;
     public assetCountBox: any;
     public assetCountCase: any;
@@ -102,6 +109,7 @@ export class OrdersComponent implements OnInit {
         }
         const message = 'Orders loaded from ' + source;
         this.utilsService.showToast(message);
+        this.popupUiAction();
     } else {
       this.logout();
     }
@@ -302,5 +310,38 @@ export class OrdersComponent implements OnInit {
 
     public cancelChanges(): void{
         $('#barcodeScanPopup').modal('hide');
+    }
+
+    public popupUiAction(): void {
+        let app = this;
+        $('#barcodeScanPopup').on('check_barcode', {}, (e, code, canvas) => {
+            if (code){
+                // check by api
+                $('#barcodeScanPopup').trigger('show_item', [code, 'Product ' + code, 1]);
+                $('#barcode-scan-event').trigger('barcode_show_img', [code, canvas]);
+                $('#barcode-scan-event').trigger('barcode_wand_input_clean');
+            }
+        });
+
+        $('#barcodeScanPopup').on('show_item', {}, (e, code, name, qty) => {
+            let isItemFound = false;
+            $('#popup-list-item > .item_row').each((i, v) => {
+                if ($(v).data('code') === code){
+                    // tslint:disable-next-line:no-shadowed-variable
+                    let qty = $(v).find('.item-qty').val();
+                    if (qty) { qty = 1; }
+                    qty++;
+                    $(v).find('.item-qty').val(qty);
+                    isItemFound = true;
+                }
+            });
+            if (!isItemFound){
+                const itemHtml = '<div class="row form-group item_row" data-code="' + code + '">\
+                                    <div class="col-md-6">' + name + '</div>\
+                                    <div class="col-md-6"><input type="text" class="item-qty form-control" value="1"/></div>\
+                                </div>';
+                $('#popup-list-item').append(itemHtml);
+            }
+        });
     }
 }
