@@ -58,6 +58,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="barcodeScanPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+            <form id="barcode-pos-form">
             <div id="barcode-scan-event"></div>
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 950px;">
                 <div class="modal-content">
@@ -76,31 +77,38 @@
                         <div class="row form-group">
                             <div class="col-md-6 row">
                                 <div class="col-md-4">SO #</div>
-                                <div class="col-md-8"><input class="form-control"/></div>
+                                <div class="col-md-8"><input class="form-control" name="pos-number" id="pos-number"/></div>
                             </div>
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Dealer</div>
-                                <div class="col-md-8"><input class="form-control"/></div>
+                                <div class="col-md-8"><input class="form-control" name="pos-dealer" id="pos-dealer"/></div>
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Vendor Name</div>
-                                <div class="col-md-8"><input class="form-control"/></div>
+                                <div class="col-md-8">
+<!--                                    <input class="form-control" name="pos-vendor" id="pos-vendor"/>-->
+                                    <select name="pos-vendor" id="pos-vendor" class="form-control">
+                                        <option *ngFor="let item of vendorList;" value="{{item.id}}">{{item.name}}</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Contact Name</div>
-                                <div class="col-md-8"><input class="form-control"/></div>
+                                <div class="col-md-8"><input class="form-control" name="pos-contact" id="pos-contact"/></div>
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Job Name</div>
-                                <div class="col-md-8"><input class="form-control"/></div>
+                                <div class="col-md-8"><input class="form-control" name="pos-job" id="pos-job"/></div>
                             </div>
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Date</div>
-                                <div class="col-md-8"><input class="form-control"/></div>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="pos-date" id="pos-date" placeholder="mm/dd/yyyy"/>
+                                </div>
                             </div>
                         </div>
                         <div class="row form-group">
@@ -139,12 +147,13 @@
                     </div>
                     <div class="modal-footer">
                         <div style="margin: 0 auto;">
-                            <button type="button" class="btn btn-primary" style="margin-right: 10px;">Save Changes</button>
+                            <button type="button" class="btn btn-primary" style="margin-right: 10px;" (click)="submitPosForm()">Save Changes</button>
                             <button type="button"  class="btn btn-secondary" (click)="cancelChanges()">Cancel Changes</button>
                         </div>
                     </div>
                 </div>
             </div>
+            </form>
         </div>
         <!-- /Modal -->
     </div>

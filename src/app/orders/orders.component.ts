@@ -42,6 +42,7 @@ export class OrdersComponent implements OnInit {
     public assetCountBox: any;
     public assetCountCase: any;
     public checkBoxByBox = true;
+    public vendorList = [];
 
   dataReturned: any;
 
@@ -86,6 +87,7 @@ export class OrdersComponent implements OnInit {
     }).catch(error => {
       console.error(error);
     });
+    this.loadVendorList();
    }
 
   private registerToEvents(offlineDetectorService: OfflineDetectorService): void {
@@ -317,9 +319,7 @@ export class OrdersComponent implements OnInit {
         $('#barcodeScanPopup').on('check_barcode', {}, (e, code, canvas) => {
             if (code){
                 // check by api
-                $('#barcodeScanPopup').trigger('show_item', [code, 'Product ' + code, 1]);
-                $('#barcode-scan-event').trigger('barcode_show_img', [code, canvas]);
-                $('#barcode-scan-event').trigger('barcode_wand_input_clean');
+                app.validatePosCode(code, canvas);
             }
         });
 
@@ -337,11 +337,66 @@ export class OrdersComponent implements OnInit {
             });
             if (!isItemFound){
                 const itemHtml = '<div class="row form-group item_row" data-code="' + code + '">\
+                                    <input type="hidden" name="pos-code[]" class="item-code" value="' + code + '"/>\
                                     <div class="col-md-6">' + name + '</div>\
-                                    <div class="col-md-6"><input type="text" class="item-qty form-control" value="1"/></div>\
+                                    <div class="col-md-6"><input type="text" class="item-qty form-control" value="1" name="pos-qty[]"/></div>\
                                 </div>';
                 $('#popup-list-item').append(itemHtml);
             }
         });
+    }
+
+    public submitPosForm(): void {
+        const posNumber = $('#pos-number').val();
+        const posDealer = $('#pos-dealer').val();
+        const posVendor = $('#pos-vendor').val();
+        const posContact = $('#pos-contact').val();
+        const posJob = $('#pos-job').val();
+        const posDate = $('#pos-date').val();
+        const lineItem = [];
+        // tslint:disable-next-line:one-variable-per-declaration
+        let itemCode, itemQty, item;
+        $('#popup-list-item > .item_row').each((i, v) => {
+            item = $(v);
+            itemCode = item.find('.item-code').val();
+            itemQty = item.find('.item-qty').val();
+            lineItem.push({
+                code: itemCode,
+                qty: itemQty
+            });
+        });
+        console.log(lineItem);
+    }
+
+    async validatePosCode(barcodeCode, canvas): Promise <any>{
+        const app = this;
+        const params = {
+            code : barcodeCode
+        };
+        app.apiRequestService.post(this.apiRequestService.ENDPOINT_POS_VALIDATE, params).subscribe(response => {
+            const responseData = response.body;
+            if (responseData.status === 'success'){
+                const itemData = responseData.data;
+                $('#barcodeScanPopup').trigger('show_item', [barcodeCode, itemData.name, 1]);
+                $('#barcode-scan-event').trigger('barcode_show_img', [barcodeCode, canvas]);
+                $('#barcode-scan-event').trigger('barcode_wand_input_clean');
+            } else {
+                app.utilsService.showToast(responseData.message);
+                $('#barcode-scan-event').trigger('barcode_wand_input_select');
+            }
+        }, error => {
+            // do nothing
+        });
+    }
+
+    async loadVendorList(): Promise<any>{
+        const app = this;
+        app.apiRequestService.post(app.apiRequestService.ENDPOINT_POS_VENDOR, {}).subscribe(response => {
+            const responseData = response.body;
+            if (responseData.status === 'success'){
+                console.log(responseData);
+                app.vendorList = responseData.data;
+            }
+        }, error => {});
     }
 }

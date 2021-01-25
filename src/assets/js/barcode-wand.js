@@ -17,7 +17,10 @@ $(function() {
     });
 
     $('#barcode-scan-event').on('barcode_wand_input_select', {}, function (e) {
-        $('#wand-input').select();
+        var input = $('#wand-input');
+        if (input.val() != ''){
+            input.select();
+        }
     });
 });
 

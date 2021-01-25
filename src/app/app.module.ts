@@ -29,16 +29,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     OrderComponent,
     PageNotFoundComponent
   ],
-  imports: [
-    BrowserModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxSpinnerModule,
-    BrowserAnimationsModule
-  ],
+    imports: [
+        BrowserModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxSpinnerModule,
+        BrowserAnimationsModule
+    ],
   providers: [AppConfig],
   bootstrap: [AppComponent]
 })
