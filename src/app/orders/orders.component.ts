@@ -267,7 +267,6 @@ export class OrdersComponent implements OnInit {
             } catch (err){
                 console.log('doesn\'t exist or cant remove', err);
             }
-
         });
     }
 
@@ -296,17 +295,10 @@ export class OrdersComponent implements OnInit {
     }
 
     public toogleScanBox(): void{
-        const app = this;
-        if (!$('.toogleScan').is(':checked')){
-            $('#qty_received #txt_qty').hide();
-            $('#qty_received #input_qty_received').show();
-            app.assetCountCase = $('#qty_received #input_qty_received').val();
-            app.checkBoxByBox = false;
+        if ($('.toogleScan').is(':checked')){
+            $('.item-qty').prop('readonly', true);
         } else{
-            $('#qty_received #txt_qty').show();
-            $('#qty_received #input_qty_received').hide();
-            app.assetCountBox = $('#qty_received #txt_qty').html();
-            app.checkBoxByBox = true;
+            $('.item-qty').removeAttr('readonly');
         }
     }
 
@@ -339,7 +331,7 @@ export class OrdersComponent implements OnInit {
                 const itemHtml = '<div class="row form-group item_row" data-code="' + code + '">\
                                     <input type="hidden" name="pos-code[]" class="item-code" value="' + code + '"/>\
                                     <div class="col-md-6">' + name + '</div>\
-                                    <div class="col-md-6"><input type="text" class="item-qty form-control" value="1" name="pos-qty[]"/></div>\
+                                    <div class="col-md-6"><input type="text" class="item-qty form-control" readonly="readonly" value="1" name="pos-qty[]"/></div>\
                                 </div>';
                 $('#popup-list-item').append(itemHtml);
             }
@@ -347,6 +339,7 @@ export class OrdersComponent implements OnInit {
     }
 
     public submitPosForm(): void {
+        const app = this;
         const posNumber = $('#pos-number').val();
         const posDealer = $('#pos-dealer').val();
         const posVendor = $('#pos-vendor').val();
@@ -365,7 +358,24 @@ export class OrdersComponent implements OnInit {
                 qty: itemQty
             });
         });
-        console.log(lineItem);
+        const formData = {
+            cf_960: posNumber,
+            account_id: posDealer,
+            cf_contact_name: posContact,
+            subject: posJob,
+            duedate: posDate,
+            lineItems: lineItem
+        };
+        app.apiRequestService.post(app.apiRequestService.ENDPOINT_POS_CREATE_SO, formData).subscribe(response => {
+            const responseData = response.body;
+            if (responseData.status === 'success'){
+                app.cancelChanges();
+            } else {
+                app.utilsService.showToast(responseData.message);
+            }
+        }, error => {
+            // do nothing
+        });
     }
 
     async validatePosCode(barcodeCode, canvas): Promise <any>{

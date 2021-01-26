@@ -14,6 +14,7 @@ export class ApiRequestService {
     public ENDPOINT_AUTO_LOGIN = 'autoLogin.php';
     public ENDPOINT_POS_VALIDATE = 'posValidateCode.php';
     public ENDPOINT_POS_VENDOR = 'posVendorList.php';
+    public ENDPOINT_POS_CREATE_SO = 'posCreateSO.php';
 
     constructor(
         private httpClient: HttpClient,
