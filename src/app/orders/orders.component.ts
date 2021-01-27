@@ -364,6 +364,7 @@ export class OrdersComponent implements OnInit {
             cf_contact_name: posContact,
             subject: posJob,
             duedate: posDate,
+            sostatus: 'Picked Up / Delivered',
             lineItems: lineItem
         };
         app.apiRequestService.post(app.apiRequestService.ENDPOINT_POS_CREATE_SO, formData).subscribe(response => {
