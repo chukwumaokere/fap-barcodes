@@ -327,11 +327,15 @@ export class OrdersComponent implements OnInit {
                     isItemFound = true;
                 }
             });
+            let readonlyText = '';
+            if ($('.toogleScan').is(':checked')){
+                readonlyText = 'readonly="readonly"';
+            }
             if (!isItemFound){
                 const itemHtml = '<div class="row form-group item_row" data-code="' + code + '">\
                                     <input type="hidden" name="pos-code[]" class="item-code" value="' + code + '"/>\
                                     <div class="col-md-6">' + name + '</div>\
-                                    <div class="col-md-6"><input type="text" class="item-qty form-control" readonly="readonly" value="1" name="pos-qty[]"/></div>\
+                                    <div class="col-md-6"><input type="text" class="item-qty form-control" ' + readonlyText + ' value="1" name="pos-qty[]"/></div>\
                                 </div>';
                 $('#popup-list-item').append(itemHtml);
             }
