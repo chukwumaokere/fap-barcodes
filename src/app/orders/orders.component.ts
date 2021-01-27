@@ -371,6 +371,7 @@ export class OrdersComponent implements OnInit {
             const responseData = response.body;
             if (responseData.status === 'success'){
                 app.cancelChanges();
+                window.location.reload();
             } else {
                 app.utilsService.showToast(responseData.message);
             }
