@@ -340,6 +340,11 @@ export class OrdersComponent implements OnInit {
                 $('#popup-list-item').append(itemHtml);
             }
         });
+        const newSoId = app.utilsService.getCookie('new_so_id');
+        if (newSoId){
+            app.utilsService.deleteCookie('new_so_id');
+            window.open('order/' + newSoId, '_blank');
+        }
     }
 
     public submitPosForm(): void {
@@ -374,6 +379,7 @@ export class OrdersComponent implements OnInit {
         app.apiRequestService.post(app.apiRequestService.ENDPOINT_POS_CREATE_SO, formData).subscribe(response => {
             const responseData = response.body;
             if (responseData.status === 'success'){
+                app.utilsService.setCookie('new_so_id', responseData.data.soId, 365);
                 app.cancelChanges();
                 window.location.reload();
             } else {
