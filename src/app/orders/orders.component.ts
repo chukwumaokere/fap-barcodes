@@ -33,6 +33,7 @@ export class OrdersComponent implements OnInit {
     public dynamicScripts: Array<string> = [
         './assets/js/quaggaJS/dist/quagga.js',
         './assets/js/JsBarcode.js',
+        './assets/js/bootstrap-datepicker.js',
         './assets/js/barcode-locator.js',
         './assets/js/barcode-input.js',
         './assets/js/barcode-wand.js',
@@ -211,6 +212,11 @@ export class OrdersComponent implements OnInit {
                 db['data'].bulkPut(dataList).then(function(lastKey) {
                     thisIntanse.getDataFromIndexDB();
                     thisIntanse.SpinnerService.hide();
+                    const newSoId = thisIntanse.utilsService.getCookie('new_so_id');
+                    if (newSoId){
+                        thisIntanse.utilsService.deleteCookie('new_so_id');
+                        window.open('order/' + newSoId, '_blank');
+                    }
                 }).catch(Dexie.BulkError, function (e) {
                 });
             }else{
@@ -254,20 +260,23 @@ export class OrdersComponent implements OnInit {
   }
 
     public openScanBarcodePopup(): void {
+        const app = this;
         $('#barcodeScanPopup').modal('show');
+        app.setScanBarcodeDefaultData();
         if (this.reloadScripts === true){
             this.loadScript();
             this.reloadScripts = false;
         }
-        $('#barcodeScanPopup').on('hide.bs.modal', e => {
+        /*$('#barcodeScanPopup').on('hide.bs.modal', e => {
             document.querySelector('ul.thumbnails').innerHTML = '';
             try{
-                document.querySelector('canvas.imgBuffer').remove();
-                document.querySelector('canvas.drawingBuffer').remove();
+                app.resetScanBarcodeForm();
+                // document.querySelector('canvas.imgBuffer').remove();
+                // document.querySelector('canvas.drawingBuffer').remove();
             } catch (err){
                 console.log('doesn\'t exist or cant remove', err);
             }
-        });
+        });*/
     }
 
     public loadScript(): void {
@@ -296,14 +305,19 @@ export class OrdersComponent implements OnInit {
 
     public toogleScanBox(): void{
         if ($('.toogleScan').is(':checked')){
-            $('.item-qty').prop('readonly', true);
+            // $('.item-qty').prop('readonly', true);
+            $('.item-qty').hide();
+            $('.item-qty-text').show();
         } else{
-            $('.item-qty').removeAttr('readonly');
+            // $('.item-qty').removeAttr('readonly');
+            $('.item-qty').show();
+            $('.item-qty-text').hide();
         }
     }
 
     public cancelChanges(): void{
         $('#barcodeScanPopup').modal('hide');
+        $('#barcodeScanPopupConfirm').modal('show');
     }
 
     public popupUiAction(): void {
@@ -328,23 +342,50 @@ export class OrdersComponent implements OnInit {
                 }
             });
             let readonlyText = '';
+            let labelStyle = '';
+            let inputStyle = '';
             if ($('.toogleScan').is(':checked')){
                 readonlyText = 'readonly="readonly"';
+                labelStyle = 'display:block;';
+                inputStyle = 'display:none;';
+            } else {
+                labelStyle = 'display:none;';
+                inputStyle = 'display:block;';
             }
             if (!isItemFound){
                 const itemHtml = '<div class="row form-group item_row" data-code="' + code + '">\
                                     <input type="hidden" name="pos-code[]" class="item-code" value="' + code + '"/>\
-                                    <div class="col-md-6">' + name + '</div>\
-                                    <div class="col-md-6"><input type="text" class="item-qty form-control" ' + readonlyText + ' value="1" name="pos-qty[]"/></div>\
+                                    <div class="col-md-9">' + name + '</div>\
+                                    <div class="col-md-3"><span class="item-qty-text" style="' + labelStyle + '">1</span><input type="text" class="item-qty form-control" style="' + inputStyle + '" value="1" name="pos-qty[]"/></div>\
                                 </div>';
                 $('#popup-list-item').append(itemHtml);
             }
         });
-        const newSoId = app.utilsService.getCookie('new_so_id');
-        if (newSoId){
-            app.utilsService.deleteCookie('new_so_id');
-            window.open('order/' + newSoId, '_blank');
-        }
+
+        $('#pos-dealer-name').autocomplete({
+            source: (request, response) => {
+                const searchName = $('#pos-dealer-name').val();
+                const params = {name: searchName};
+                app.apiRequestService.post(app.apiRequestService.ENDPOINT_POS_SEARCH_ACC, params).subscribe(responseData => {
+                    const responseDataBody = responseData.body;
+                    if (responseDataBody.status === 'success'){
+                        response(responseDataBody.data);
+                    }
+                }, error => {});
+            },
+            select: (event, ui) => {
+                // event.preventDefault();
+                // $(this).val(ui.item.label);
+                $('#pos-dealer').val(ui.item.id);
+            },
+            minLength: 3
+        });
+
+        $('#confirm-hide-barcode-popup').on('click', (e) => {
+            $('#barcodeScanPopup').modal('hide');
+            $('#barcodeScanPopupConfirm').modal('hide');
+            app.resetScanBarcodeForm();
+        });
     }
 
     public submitPosForm(): void {
@@ -420,5 +461,28 @@ export class OrdersComponent implements OnInit {
                 app.vendorList = responseData.data;
             }
         }, error => {});
+    }
+
+    public resetScanBarcodeForm(): void {
+        $('#pos-number').val('');
+        $('#pos-dealer').val('');
+        $('#pos-dealer-name').val('');
+        $('#pos-vendor').val('');
+        $('#pos-contact').val('');
+        $('#pos-job').val('');
+        $('#pos-date').val('');
+        $('#popup-list-item').html('');
+        $('ul.thumbnails').html('');
+        this.setScanBarcodeDefaultData();
+    }
+
+    public setScanBarcodeDefaultData(): void {
+        $('#pos-vendor > option').each((i, v) => {
+            let option = $(v);
+            if (option.html() === 'FAP Retail'){
+                const value = option.val();
+                $('#pos-vendor').val(value);
+            }
+        });
     }
 }

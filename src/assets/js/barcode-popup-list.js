@@ -19,4 +19,6 @@ $(function() {
         $('#barcodeScanPopup').trigger('check_barcode', [code, canvas]);
     });
 
+    $('.dateField').datepicker();
+
 });

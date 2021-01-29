@@ -81,7 +81,10 @@
                             </div>
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Dealer</div>
-                                <div class="col-md-8"><input class="form-control" name="pos-dealer" id="pos-dealer"/></div>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="pos-dealer-name" id="pos-dealer-name"/>
+                                    <input type="hidden" class="form-control" name="pos-dealer" id="pos-dealer"/>
+                                </div>
                             </div>
                         </div>
                         <div class="row form-group">
@@ -107,16 +110,9 @@
                             <div class="col-md-6 row">
                                 <div class="col-md-4">Date</div>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="pos-date" id="pos-date" placeholder="mm/dd/yyyy"/>
+                                    <input class="form-control dateField" name="pos-date" id="pos-date" placeholder="mm/dd/yyyy" data-format="mm/dd/yyyy"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-md-6">Item Name</div>
-                            <div class="col-md-6 text-center">Picked Quantity</div>
-                        </div>
-                        <div id="popup-list-item">
-
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 text-left">Wand Scanning Input</div>
@@ -139,6 +135,13 @@
                             <ul class="thumbnails"></ul>
                             <ul class="collector"></ul>
                         </div>
+                        <div class="row form-group">
+                            <div class="col-md-9">Item Name</div>
+                            <div class="col-md-3 text-center">Picked Quantity</div>
+                        </div>
+                        <div id="popup-list-item">
+
+                        </div>
                         <div id="interactive" class="viewport"></div>
                         <div id="debug" class="detection"></div>
                         <input id="code_type" hidden value="">
@@ -156,5 +159,22 @@
             </form>
         </div>
         <!-- /Modal -->
+
+        <!--Modal alert-->
+        <div class="modal fade" id="barcodeScanPopupConfirm" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" id="modal-body-container">
+                        <h5>Are you sure you'd like to cancel your changes?</h5>
+                        <div align="center" style="margin-top: 10px">
+                            <button type="button" class="btn btn-primary" style="margin-right: 10px"  data-dismiss="modal" id="confirm-hide-barcode-popup">Confirm</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#barcodeScanPopup').modal('show');">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Alert-->
+
     </div>
 </div>

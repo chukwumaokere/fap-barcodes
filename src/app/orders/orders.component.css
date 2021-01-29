@@ -306,3 +306,7 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+ul.ui-autocomplete {
+    z-index: 1100;
+}
