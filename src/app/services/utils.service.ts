@@ -15,6 +15,7 @@ export class UtilsService {
       $('.toast').toast(options);
       $('#toast-body').html(msg);
       $('.toast').toast('show');
+      $('#notif').parent('div').css('zIndex', '99999');
   }
 
   public setMsg(flag): void {
