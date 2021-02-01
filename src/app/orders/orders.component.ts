@@ -414,7 +414,7 @@ export class OrdersComponent implements OnInit {
             cf_contact_name: posContact,
             subject: posJob,
             duedate: posDate,
-            sostatus: 'Picked Up / Delivered',
+            sostatus: 'Created',
             cf_vendor_id: posVendor,
             lineItems: lineItem
         };
