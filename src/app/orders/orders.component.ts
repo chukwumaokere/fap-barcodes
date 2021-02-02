@@ -329,15 +329,20 @@ export class OrdersComponent implements OnInit {
             }
         });
 
-        $('#barcodeScanPopup').on('show_item', {}, (e, code, name, qty) => {
+        $('#barcodeScanPopup').on('show_item', {}, (e, code, name, qty, productId) => {
             let isItemFound = false;
             $('#popup-list-item > .item_row').each((i, v) => {
-                if ($(v).data('code') === code){
+                // tslint:disable-next-line:triple-equals
+                if ($(v).data('code') == productId){
                     // tslint:disable-next-line:no-shadowed-variable
                     let qty = $(v).find('.item-qty').val();
-                    if (qty) { qty = 1; }
+                    let assetCode = $(v).find('.item-code').val();
+                    assetCode = assetCode + ',' + code;
+                    if (!qty) { qty = 1; }
                     qty++;
                     $(v).find('.item-qty').val(qty);
+                    $(v).find('.item-qty-text').html(qty);
+                    $(v).find('.item-code').val(assetCode);
                     isItemFound = true;
                 }
             });
@@ -353,7 +358,7 @@ export class OrdersComponent implements OnInit {
                 inputStyle = 'display:block;';
             }
             if (!isItemFound){
-                const itemHtml = '<div class="row form-group item_row" data-code="' + code + '">\
+                const itemHtml = '<div class="row form-group item_row" data-code="' + productId + '">\
                                     <input type="hidden" name="pos-code[]" class="item-code" value="' + code + '"/>\
                                     <div class="col-md-9">' + name + '</div>\
                                     <div class="col-md-3"><span class="item-qty-text" style="' + labelStyle + '">1</span><input type="text" class="item-qty form-control" style="' + inputStyle + '" value="1" name="pos-qty[]"/></div>\
@@ -421,11 +426,11 @@ export class OrdersComponent implements OnInit {
         app.apiRequestService.post(app.apiRequestService.ENDPOINT_POS_CREATE_SO, formData).subscribe(response => {
             const responseData = response.body;
             if (responseData.status === 'success'){
-                if (responseData.data.soUrl){
+                /*if (responseData.data.soUrl){
                     window.open(responseData.data.soUrl, '_blank');
-                } else {
+                } else {*/
                     app.utilsService.setCookie('new_so_id', responseData.data.soId, 365);
-                }
+                // }
                 app.cancelChanges();
                 window.location.reload();
             } else {
@@ -445,7 +450,7 @@ export class OrdersComponent implements OnInit {
             const responseData = response.body;
             if (responseData.status === 'success'){
                 const itemData = responseData.data;
-                $('#barcodeScanPopup').trigger('show_item', [barcodeCode, itemData.name, 1]);
+                $('#barcodeScanPopup').trigger('show_item', [barcodeCode, itemData.name, 1, itemData.product_id]);
                 $('#barcode-scan-event').trigger('barcode_show_img', [barcodeCode, canvas]);
                 $('#barcode-scan-event').trigger('barcode_wand_input_clean');
             } else {
