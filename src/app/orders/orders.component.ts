@@ -426,11 +426,11 @@ export class OrdersComponent implements OnInit {
         app.apiRequestService.post(app.apiRequestService.ENDPOINT_POS_CREATE_SO, formData).subscribe(response => {
             const responseData = response.body;
             if (responseData.status === 'success'){
-                /*if (responseData.data.soUrl){
+                if (responseData.data.soUrl){
                     window.open(responseData.data.soUrl, '_blank');
-                } else {*/
+                } else {
                     app.utilsService.setCookie('new_so_id', responseData.data.soId, 365);
-                // }
+                }
                 app.cancelChanges();
                 window.location.reload();
             } else {
