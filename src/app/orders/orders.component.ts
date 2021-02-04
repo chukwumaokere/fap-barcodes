@@ -44,6 +44,7 @@ export class OrdersComponent implements OnInit {
     public assetCountCase: any;
     public checkBoxByBox = true;
     public vendorList = [];
+    public codeScaned = [];
 
   dataReturned: any;
 
@@ -365,6 +366,7 @@ export class OrdersComponent implements OnInit {
                                 </div>';
                 $('#popup-list-item').append(itemHtml);
             }
+            app.codeScaned.push(code);
         });
 
         $('#pos-dealer-name').autocomplete({
@@ -443,6 +445,13 @@ export class OrdersComponent implements OnInit {
 
     async validatePosCode(barcodeCode, canvas): Promise <any>{
         const app = this;
+        console.log('1111111111111111111111111111');
+        console.log(app.codeScaned);
+        if (app.codeScaned.indexOf(barcodeCode) > -1){
+            app.utilsService.showToast('This barcode has already been scanned and assigned previously.');
+            $('#barcode-scan-event').trigger('barcode_wand_input_clean');
+            return false;
+        }
         const params = {
             code : barcodeCode
         };
@@ -484,6 +493,7 @@ export class OrdersComponent implements OnInit {
         $('#popup-list-item').html('');
         $('ul.thumbnails').html('');
         this.setScanBarcodeDefaultData();
+        this.codeScaned = [];
     }
 
     public setScanBarcodeDefaultData(): void {
