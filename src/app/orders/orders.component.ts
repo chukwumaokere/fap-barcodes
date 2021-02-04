@@ -445,8 +445,6 @@ export class OrdersComponent implements OnInit {
 
     async validatePosCode(barcodeCode, canvas): Promise <any>{
         const app = this;
-        console.log('1111111111111111111111111111');
-        console.log(app.codeScaned);
         if (app.codeScaned.indexOf(barcodeCode) > -1){
             app.utilsService.showToast('This barcode has already been scanned and assigned previously.');
             $('#barcode-scan-event').trigger('barcode_wand_input_clean');
