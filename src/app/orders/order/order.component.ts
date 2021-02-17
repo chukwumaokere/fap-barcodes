@@ -39,6 +39,7 @@ export class OrderComponent implements OnInit {
   public clickable_rows: Boolean = false;
   public dynamicScripts: Array<string> = ["./assets/js/quaggaJS/dist/quagga.js", './assets/js/quaggaJS/example/live_w_locator.js', './assets/js/quaggaJS/example/file_input.js', './assets/js/JsBarcode.js'];
   public reloadScripts: Boolean = true;
+  public isProcess = false;
 
     public assetCountBox: any;
     public assetCountCase: any;
@@ -117,8 +118,12 @@ export class OrderComponent implements OnInit {
     }
   }
 
-    public async createAssets(): Promise<any> {
+    public async createAssets(event): Promise<any> {
         const thisIntanse = this;
+        if (thisIntanse.isProcess){
+            return false;
+        }
+        thisIntanse.isProcess = true;
         thisIntanse.SpinnerService.show();
         const data = Object();
         const orderId = this.orderid;
@@ -151,11 +156,13 @@ export class OrderComponent implements OnInit {
               const db = await this.databaseService.getDb();
               db.asset_queue.add({data: assetsData});
               this.utilsService.showToast('Update failed, please try again <br>' + error);
+              thisIntanse.isProcess = false;
             });
         } else {
             const db = await this.databaseService.getDb();
             db.asset_queue.add({data: assetsData});
             this.utilsService.showToast('Update queued until you are online');
+            thisIntanse.isProcess = false;
             this.router.navigateByUrl('/');
         }
     }
